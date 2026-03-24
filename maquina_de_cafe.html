@@ -1,0 +1,348 @@
+import React, { useState, useEffect, useRef } from 'react';
+import { Coffee, Droplets, Milk, Play, Terminal, Info } from 'lucide-react';
+
+export default function App() {
+  // Estados para las variables (Insumos)
+  const [grano, setGrano] = useState('Arábica Intenso');
+  const [agua, setAgua] = useState(250);
+  const [leche, setLeche] = useState(true);
+
+  // Estados para la simulación (La Máquina)
+  const [isBrewing, setIsBrewing] = useState(false);
+  const [logs, setLogs] = useState([]);
+  const [activeLine, setActiveLine] = useState(null);
+  const [cupFill, setCupFill] = useState(0); // 0 a 100
+  const [liquidColor, setLiquidColor] = useState('#3E2723'); // Color café por defecto
+
+  const consoleEndRef = useRef(null);
+
+  // Auto-scroll de la consola
+  useEffect(() => {
+    consoleEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [logs]);
+
+  // Función auxiliar para pausas asíncronas
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const addLog = (message) => {
+    setLogs((prev) => [...prev, message]);
+  };
+
+  const prepararCafe = async () => {
+    if (isBrewing) return;
+    
+    // Reiniciar estados
+    setIsBrewing(true);
+    setLogs([]);
+    setCupFill(0);
+    setLiquidColor('#3E2723'); // Café negro inicialmente
+    
+    // Iniciar simulación
+    setActiveLine(30); // Línea donde se llama a la función
+    await sleep(800);
+    
+    setActiveLine(1); // def preparar_cafe...
+    await sleep(800);
+    
+    setActiveLine(10); // print iniciando...
+    addLog(`> --- Iniciando preparación de café ${grano} ---`);
+    await sleep(800);
+    
+    setActiveLine(11); // print calentando agua...
+    addLog(`> Calentando ${agua} ml de agua para el filtro...`);
+    setCupFill(30); // Empieza a llenarse
+    await sleep(1000);
+    
+    setActiveLine(15); // if con_leche == True:
+    await sleep(800);
+    
+    if (leche) {
+      setActiveLine(16); // print agregando leche...
+      addLog("> Agregando espuma de leche caliente a la taza 🥛.");
+      setLiquidColor('#A67B5B'); // Cambia a color café con leche
+      setCupFill(70);
+      await sleep(800);
+      
+      setActiveLine(17); // resultado = Cortado
+      setCupFill(100);
+      await sleep(800);
+    } else {
+      setActiveLine(18); // else:
+      await sleep(800);
+      
+      setActiveLine(19); // print no se solicitó leche...
+      addLog("> No se solicitó leche. Sirviendo el café negro ☕.");
+      setCupFill(100);
+      await sleep(800);
+      
+      setActiveLine(20); // resultado = Negro
+      await sleep(800);
+    }
+    
+    setActiveLine(22); // print proceso terminado
+    addLog("> ¡El proceso interno terminó, el café está listo para entregarse!");
+    await sleep(1000);
+    
+    setActiveLine(25); // return resultado
+    await sleep(800);
+    
+    setActiveLine(32); // print final
+    const resultado = leche ? `Café ${grano} Cortado (con leche)` : `Café ${grano} Negro`;
+    addLog(`> El cliente acaba de recibir su: ${resultado}`);
+    
+    setActiveLine(null);
+    setIsBrewing(false);
+  };
+
+  return (
+    <div className="min-h-screen bg-slate-100 p-4 md:p-8 font-sans text-slate-800">
+      <header className="max-w-6xl mx-auto mb-8 text-center">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-slate-900 flex items-center justify-center gap-3">
+          <Coffee size={40} className="text-amber-700" />
+          Aprende a Programar: La Máquina de Café
+        </h1>
+        <p className="mt-2 text-slate-600 max-w-2xl mx-auto">
+          Descubre cómo funcionan las <strong>Variables</strong> (los ingredientes), las <strong>Funciones</strong> (la máquina) y los <strong>Condicionales</strong> (las decisiones) interactuando con este simulador.
+        </p>
+      </header>
+
+      <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-8">
+        
+        {/* PANEL IZQUIERDO: Interfaz Visual */}
+        <div className="space-y-6">
+          
+          {/* Controles (Variables) */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200">
+            <h2 className="text-xl font-bold mb-4 flex items-center gap-2 text-blue-700">
+              <Info size={20} />
+              1. Variables (Ingredientes)
+            </h2>
+            <p className="text-sm text-slate-500 mb-6">Cambia los valores aquí y observa cómo se actualizan en el código de la derecha.</p>
+            
+            <div className="space-y-5">
+              <div>
+                <label className="flex items-center gap-2 text-sm font-semibold mb-2">
+                  <Coffee size={16} className="text-amber-800" />
+                  Tipo de Grano (String / Texto)
+                </label>
+                <select 
+                  value={grano}
+                  onChange={(e) => setGrano(e.target.value)}
+                  disabled={isBrewing}
+                  className="w-full p-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-amber-500 outline-none disabled:opacity-50"
+                >
+                  <option value="Arábica Intenso">Arábica Intenso</option>
+                  <option value="Robusta Suave">Robusta Suave</option>
+                  <option value="Descafeinado">Descafeinado</option>
+                </select>
+              </div>
+
+              <div>
+                <label className="flex items-center justify-between text-sm font-semibold mb-2">
+                  <span className="flex items-center gap-2">
+                    <Droplets size={16} className="text-blue-500" />
+                    Cantidad de Agua (Int / Número entero)
+                  </span>
+                  <span className="text-blue-600 font-bold">{agua} ml</span>
+                </label>
+                <input 
+                  type="range" 
+                  min="50" max="500" step="50"
+                  value={agua}
+                  onChange={(e) => setAgua(Number(e.target.value))}
+                  disabled={isBrewing}
+                  className="w-full accent-blue-500 disabled:opacity-50"
+                />
+              </div>
+
+              <div>
+                <label className="flex items-center gap-2 text-sm font-semibold mb-2">
+                  <Milk size={16} className="text-slate-700" />
+                  ¿Con Leche? (Boolean / Verdadero o Falso)
+                </label>
+                <div className="flex items-center gap-3 mt-1">
+                  <button
+                    onClick={() => setLeche(true)}
+                    disabled={isBrewing}
+                    className={`flex-1 py-2 rounded-lg font-medium transition-colors border ${leche ? 'bg-amber-100 border-amber-300 text-amber-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}
+                  >
+                    Sí (True)
+                  </button>
+                  <button
+                    onClick={() => setLeche(false)}
+                    disabled={isBrewing}
+                    className={`flex-1 py-2 rounded-lg font-medium transition-colors border ${!leche ? 'bg-amber-100 border-amber-300 text-amber-900' : 'bg-slate-50 border-slate-200 text-slate-500'}`}
+                  >
+                    No (False)
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Visualizador (La Máquina/Función) */}
+          <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 text-center relative overflow-hidden">
+            <h2 className="text-xl font-bold mb-2 flex items-center justify-center gap-2 text-amber-700">
+              <Play size={20} />
+              2. Función (La Máquina)
+            </h2>
+            <p className="text-sm text-slate-500 mb-8">Presiona el botón para ejecutar el bloque de código.</p>
+
+            {/* Animación de la taza */}
+            <div className="relative w-32 h-32 mx-auto mb-8">
+              {/* Cuerpo de la taza */}
+              <div className="absolute inset-0 bg-slate-100 border-4 border-slate-300 rounded-b-3xl rounded-t-lg z-10 overflow-hidden">
+                {/* Líquido */}
+                <div 
+                  className="absolute bottom-0 w-full transition-all duration-700 ease-in-out"
+                  style={{ 
+                    height: `${cupFill}%`, 
+                    backgroundColor: liquidColor 
+                  }}
+                />
+              </div>
+              {/* Asa de la taza */}
+              <div className="absolute top-4 -right-6 w-10 h-16 border-4 border-slate-300 rounded-r-2xl z-0" />
+              
+              {/* Gota animada (solo cuando prepara) */}
+              {isBrewing && cupFill < 100 && (
+                <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 w-2 h-4 bg-amber-900 rounded-full animate-bounce z-20" />
+              )}
+            </div>
+
+            <button 
+              onClick={prepararCafe}
+              disabled={isBrewing}
+              className="bg-amber-600 hover:bg-amber-700 disabled:bg-slate-400 text-white text-lg font-bold py-3 px-8 rounded-full shadow-lg transition-transform transform active:scale-95 flex items-center gap-2 mx-auto w-full justify-center"
+            >
+              {isBrewing ? 'Preparando...' : '¡Ejecutar Función!'}
+            </button>
+          </div>
+        </div>
+
+        {/* PANEL DERECHO: Código y Consola */}
+        <div className="space-y-6 flex flex-col">
+          
+          {/* Editor de Código */}
+          <div className="bg-[#1E1E1E] rounded-2xl shadow-xl overflow-hidden flex-1 border border-slate-800 flex flex-col">
+            <div className="bg-[#2D2D2D] px-4 py-2 flex items-center gap-2 border-b border-black">
+              <div className="w-3 h-3 rounded-full bg-red-500"></div>
+              <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+              <div className="w-3 h-3 rounded-full bg-green-500"></div>
+              <span className="text-slate-400 text-xs ml-2 font-mono">script.py</span>
+            </div>
+            <div className="p-4 overflow-x-auto text-sm md:text-base font-mono leading-relaxed text-slate-300 relative flex-1">
+              
+              {/* Código renderizado línea por línea */}
+              {[
+/* 1 */ `def preparar_cafe(tipo_grano, cantidad_agua, con_leche):`,
+/* 2 */ `    """`,
+/* 3 */ `    Simula el funcionamiento de una máquina de café.`,
+/* 4 */ `    `,
+/* 5 */ `    Parámetros de entrada:`,
+/* 6 */ `    - tipo_grano (str): El nombre del grano de café o variedad.`,
+/* 7 */ `    - cantidad_agua (int): La cantidad de agua en mililitros.`,
+/* 8 */ `    - con_leche (bool): True si lo quiere con leche, False si no.`,
+/* 9 */ `    """`,
+/* 10 */ `    print(f"--- Iniciando preparación de café {tipo_grano} ---")`,
+/* 11 */ `    print(f"Calentando {cantidad_agua} ml de agua para el filtro...")`,
+/* 12 */ `    `,
+/* 13 */ `    # Estructura Condicional (If/Else)`,
+/* 14 */ `    # La máquina "toma la decisión" basándose en 'con_leche'`,
+/* 15 */ `    if con_leche == True:`,
+/* 16 */ `        print("Agregando espuma de leche caliente a la taza 🥛.")`,
+/* 17 */ `        resultado = f"Café {tipo_grano} Cortado (con leche)"`,
+/* 18 */ `    else:`,
+/* 19 */ `        print("No se solicitó leche. Sirviendo el café negro ☕.")`,
+/* 20 */ `        resultado = f"Café {tipo_grano} Negro"`,
+/* 21 */ `        `,
+/* 22 */ `    print("¡El proceso interno terminó, el café está listo para entregarse!")`,
+/* 23 */ `    `,
+/* 24 */ `    # El return entrega el producto final`,
+/* 25 */ `    return resultado`,
+/* 26 */ ``,
+/* 27 */ `# 1. Definimos las Variables (Inyectadas interactivamente)`,
+/* 28 */ `agua_necesaria = ${agua}`,
+/* 29 */ `grano_elegido = "${grano}"`,
+/* 30 */ `quiere_leche = ${leche ? 'True' : 'False'}`,
+/* 31 */ ``,
+/* 32 */ `# 2. Ejecutamos la función y guardamos el retorno`,
+/* 33 */ `mi_taza = preparar_cafe(grano_elegido, agua_necesaria, quiere_leche)`,
+/* 34 */ ``,
+/* 35 */ `print("El cliente acaba de recibir su:", mi_taza)`
+              ].map((line, index) => {
+                const lineNum = index + 1;
+                // Coloreado sintáctico básico manual para el efecto educativo
+                let formattedLine = line;
+                
+                // Colores para variables (cuando se definen abajo)
+                if (lineNum === 28) formattedLine = <><span className="text-blue-400">agua_necesaria</span> = <span className="text-orange-300">{agua}</span></>;
+                if (lineNum === 29) formattedLine = <><span className="text-blue-400">grano_elegido</span> = <span className="text-green-400">"{grano}"</span></>;
+                if (lineNum === 30) formattedLine = <><span className="text-blue-400">quiere_leche</span> = <span className="text-purple-400">{leche ? 'True' : 'False'}</span></>;
+                
+                // Resaltado de palabras clave de Python
+                if (typeof formattedLine === 'string') {
+                  formattedLine = formattedLine
+                    .replace(/def /g, '<span class="text-pink-500">def </span>')
+                    .replace(/return /g, '<span class="text-pink-500">return </span>')
+                    .replace(/if /g, '<span class="text-purple-400">if </span>')
+                    .replace(/else:/g, '<span class="text-purple-400">else:</span>')
+                    .replace(/print/g, '<span class="text-yellow-200">print</span>')
+                    .replace(/True/g, '<span class="text-purple-400">True</span>')
+                    .replace(/False/g, '<span class="text-purple-400">False</span>')
+                    .replace(/"""[\s\S]*?"""/g, match => `<span class="text-slate-500 italic">${match}</span>`)
+                    .replace(/#.*/g, match => `<span class="text-slate-500 italic">${match}</span>`);
+                }
+
+                return (
+                  <div 
+                    key={lineNum} 
+                    className={`flex px-2 rounded transition-colors duration-200 ${activeLine === lineNum ? 'bg-amber-900/50 border-l-4 border-amber-500' : 'border-l-4 border-transparent'}`}
+                  >
+                    <span className="w-8 flex-shrink-0 text-slate-600 select-none mr-4 text-right">{lineNum}</span>
+                    <span 
+                      className="whitespace-pre" 
+                      dangerouslySetInnerHTML={typeof formattedLine === 'string' ? { __html: formattedLine } : undefined}
+                    >
+                      {typeof formattedLine !== 'string' ? formattedLine : null}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Consola de Salida */}
+          <div className="bg-black rounded-2xl shadow-lg border border-slate-700 h-48 flex flex-col">
+            <div className="bg-slate-800 px-4 py-2 flex items-center gap-2 rounded-t-2xl">
+              <Terminal size={16} className="text-slate-300" />
+              <span className="text-slate-300 text-xs font-mono uppercase font-bold tracking-wider">Consola de Salida</span>
+            </div>
+            <div className="p-4 font-mono text-sm text-green-400 overflow-y-auto flex-1">
+              {logs.length === 0 && !isBrewing ? (
+                <span className="text-slate-600 italic">Esperando ejecución del script...</span>
+              ) : (
+                logs.map((log, i) => (
+                  <div key={i} className="mb-1 opacity-0 animate-[fadeIn_0.3s_ease-in-out_forwards]">{log}</div>
+                ))
+              )}
+              {isBrewing && activeLine !== null && activeLine !== 32 && (
+                <div className="w-2 h-4 bg-green-400 animate-pulse mt-2 inline-block"></div>
+              )}
+              <div ref={consoleEndRef} />
+            </div>
+          </div>
+
+        </div>
+      </div>
+      
+      {/* Estilos para animaciones CSS custom */}
+      <style dangerouslySetInnerHTML={{__html: `
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(5px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+      `}} />
+    </div>
+  );
+}
