@@ -14,43 +14,48 @@
 
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <style>
-
         /* CONFIGURACIÓN ESTRUCTURAL */
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
-        body { 
+        body {
 
-            background-color: #020617; 
+            background-color: #020617;
 
-            margin: 0; 
+            margin: 0;
 
-            padding: 0; 
+            padding: 0;
 
-            display: flex; 
+            display: flex;
 
             justify-content: center;
 
-            align-items: center; 
+            align-items: center;
 
             height: 100vh;
 
-            font-family: 'Inter', sans-serif; 
+            font-family: 'Inter', sans-serif;
 
-            overflow: hidden; /* Evita scroll durante la presentación */
+            overflow: hidden;
+            /* Evita scroll durante la presentación */
 
         }
 
-        
+
 
         .slide-container {
 
-            width: 1280px; height: 720px;
+            width: 1280px;
+            height: 720px;
 
             background-color: #0F172A;
 
@@ -60,7 +65,8 @@
 
             overflow: hidden;
 
-            display: none; /* Oculto por defecto */
+            display: none;
+            /* Oculto por defecto */
 
             flex-direction: column;
 
@@ -78,7 +84,8 @@
 
         .slide-container.active-slide {
 
-            display: flex; /* Se muestra la activa */
+            display: flex;
+            /* Se muestra la activa */
 
         }
 
@@ -86,9 +93,15 @@
 
         @keyframes fadeIn {
 
-            from { opacity: 0; transform: translateY(10px); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
 
-            to { opacity: 1; transform: translateY(0); }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
 
         }
 
@@ -98,9 +111,15 @@
 
         .slide-container::before {
 
-            content: ''; position: absolute; top: -10%; right: -10%; width: 400px; height: 400px;
+            content: '';
+            position: absolute;
+            top: -10%;
+            right: -10%;
+            width: 400px;
+            height: 400px;
 
-            background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 70%); z-index: 0;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.1) 0%, transparent 70%);
+            z-index: 0;
 
         }
 
@@ -108,51 +127,114 @@
 
         /* TIPOGRAFÍA */
 
-        .slide-title { font-size: 38px; font-weight: 800; margin-bottom: 25px; color: #38BDF8; border-left: 6px solid #38BDF8; padding-left: 20px; z-index: 1; }
+        .slide-title {
+            font-size: 38px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            color: #38BDF8;
+            border-left: 6px solid #38BDF8;
+            padding-left: 20px;
+            z-index: 1;
+        }
 
-        h1 { font-size: 80px; font-weight: 800; color: white; margin: 0; }
+        h1 {
+            font-size: 80px;
+            font-weight: 800;
+            color: white;
+            margin: 0;
+        }
 
-        p { font-size: 18px; color: #94A3B8; margin-bottom: 15px; z-index: 1; }
+        p {
+            font-size: 18px;
+            color: #94A3B8;
+            margin-bottom: 15px;
+            z-index: 1;
+        }
 
 
 
         /* COMPONENTES DE ARCHIVO Y ÁREAS */
 
-        .file-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; width: 100%; margin-top: 15px; }
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            width: 100%;
+            margin-top: 15px;
+        }
 
-        .state-column { display: flex; flex-direction: column; }
+        .state-column {
+            display: flex;
+            flex-direction: column;
+        }
 
-        .state-label { font-size: 12px; font-weight: 700; color: #64748B; text-transform: uppercase; margin-bottom: 8px; text-align: center; }
+        .state-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            text-align: center;
+        }
 
-        
+
 
         .file-card {
 
-            background-color: #111827; border: 1px solid #374151; border-radius: 10px; padding: 20px;
+            background-color: #111827;
+            border: 1px solid #374151;
+            border-radius: 10px;
+            padding: 20px;
 
-            font-family: 'Fira Code', monospace; font-size: 14px; min-height: 180px;
+            font-family: 'Fira Code', monospace;
+            font-size: 14px;
+            min-height: 180px;
 
-            display: flex; flex-direction: column;
+            display: flex;
+            flex-direction: column;
 
         }
 
-        .file-card.active { border-color: #38BDF8; background: rgba(56, 189, 248, 0.05); }
+        .file-card.active {
+            border-color: #38BDF8;
+            background: rgba(56, 189, 248, 0.05);
+        }
 
-        .file-card.success { border-color: #4ADE80; }
+        .file-card.success {
+            border-color: #4ADE80;
+        }
 
-        .file-card.branch { border-color: #A855F7; }
+        .file-card.branch {
+            border-color: #A855F7;
+        }
 
-        
 
-        .code-line { margin-bottom: 4px; color: #94A3B8; }
 
-        .code-line.active { color: #F8FAFC; }
+        .code-line {
+            margin-bottom: 4px;
+            color: #94A3B8;
+        }
 
-        .code-line.new { color: #4ADE80; font-weight: 600; }
+        .code-line.active {
+            color: #F8FAFC;
+        }
 
-        .code-line.purple { color: #C084FC; font-weight: 600; }
+        .code-line.new {
+            color: #4ADE80;
+            font-weight: 600;
+        }
 
-        .empty-state { color: #334155; font-style: italic; margin: auto; text-align: center; }
+        .code-line.purple {
+            color: #C084FC;
+            font-weight: 600;
+        }
+
+        .empty-state {
+            color: #334155;
+            font-style: italic;
+            margin: auto;
+            text-align: center;
+        }
 
 
 
@@ -160,37 +242,66 @@
 
         .command-box {
 
-            background: #000; color: #38BDF8; padding: 12px 25px; border-radius: 8px;
+            background: #000;
+            color: #38BDF8;
+            padding: 12px 25px;
+            border-radius: 8px;
 
-            font-family: 'Fira Code', monospace; font-size: 20px; font-weight: 600;
+            font-family: 'Fira Code', monospace;
+            font-size: 20px;
+            font-weight: 600;
 
-            margin-bottom: 20px; border-left: 4px solid #38BDF8; align-self: flex-start;
+            margin-bottom: 20px;
+            border-left: 4px solid #38BDF8;
+            align-self: flex-start;
 
         }
 
         .branch-tag {
 
-            padding: 4px 10px; border-radius: 4px; font-weight: 800; font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 11px;
 
-            text-transform: uppercase; margin-bottom: 10px; display: inline-block;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            display: inline-block;
 
         }
 
-        .tag-main { background: #0EA5E9; color: white; }
+        .tag-main {
+            background: #0EA5E9;
+            color: white;
+        }
 
-        .tag-feature { background: #A855F7; color: white; }
+        .tag-feature {
+            background: #A855F7;
+            color: white;
+        }
 
 
 
         /* COMPARACIÓN DE RAMAS */
 
-        .branch-comparison { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        .branch-comparison {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 100%;
+        }
 
-        .branch-row { 
+        .branch-row {
 
-            display: grid; grid-template-columns: 150px 1fr; align-items: center; gap: 20px; 
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            align-items: center;
+            gap: 20px;
 
-            background: rgba(30, 41, 59, 0.3); padding: 12px; border-radius: 12px; border: 1px solid #334155; 
+            background: rgba(30, 41, 59, 0.3);
+            padding: 12px;
+            border-radius: 12px;
+            border: 1px solid #334155;
 
         }
 
@@ -198,15 +309,29 @@
 
         /* SECCIONES */
 
-        .section-intro { justify-content: center; align-items: center; text-align: center; background: #020617; }
+        .section-intro {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: #020617;
+        }
 
-        .divider { width: 100px; height: 8px; background: #38BDF8; margin: 30px 0; }
+        .divider {
+            width: 100px;
+            height: 8px;
+            background: #38BDF8;
+            margin: 30px 0;
+        }
 
 
 
         .slide-footer {
 
-            position: absolute; bottom: 20px; right: 60px; font-size: 12px; color: #475569;
+            position: absolute;
+            bottom: 20px;
+            right: 60px;
+            font-size: 12px;
+            color: #475569;
 
             font-weight: 700;
 
@@ -269,7 +394,6 @@
             transform: scale(1.1);
 
         }
-
     </style>
 
 </head>
@@ -278,733 +402,792 @@
 
 
 
-<!-- SLIDE 1: PORTADA -->
+    <!-- SLIDE 1: PORTADA -->
 
-<div class="slide-container section-intro active-slide" id="slide1">
+    <div class="slide-container section-intro active-slide" id="slide1">
 
-    <i class="fa-solid fa-code-branch" style="font-size: 80px; color: #38BDF8; margin-bottom: 30px;"></i>
+        <i class="fa-solid fa-code-branch" style="font-size: 80px; color: #38BDF8; margin-bottom: 30px;"></i>
 
-    <h1>GIT VISUAL</h1>
+        <h1>GIT VISUAL</h1>
 
-    <div class="divider"></div>
+        <div class="divider"></div>
 
-    <p style="font-size: 24px; color: #94A3B8;">El curso completo: De la primera línea a la fusión de ramas.</p>
+        <p style="font-size: 24px; color: #94A3B8;">El curso completo: De la primera línea a la fusión de ramas.</p>
 
-    <div class="slide-footer">1 / 15</div>
-
-</div>
-
-
-
-<!-- SLIDE 2: LAS 3 ÁREAS -->
-
-<div class="slide-container" id="slide2">
-
-    <h2 class="slide-title">La Arquitectura Local</h2>
-
-    <p>Para entender Git, debemos entender que nuestro código vive en tres "estados" o lugares distintos:</p>
-
-    <div class="file-grid" style="margin-top: 40px; gap: 40px;">
-
-        <div style="text-align: center;">
-
-            <i class="fa-solid fa-laptop-code" style="font-size: 40px; color: #38BDF8; margin-bottom: 20px;"></i>
-
-            <h3 style="color: white;">Working Directory</h3>
-
-            <p style="font-size: 15px;">Tus archivos físicos. Es el editor donde escribes tu código.</p>
-
-        </div>
-
-        <div style="text-align: center;">
-
-            <i class="fa-solid fa-clipboard-list" style="font-size: 40px; color: #38BDF8; margin-bottom: 20px;"></i>
-
-            <h3 style="color: white;">Staging Area</h3>
-
-            <p style="font-size: 15px;">La zona de preparación. Aquí seleccionas qué cambios vas a guardar.</p>
-
-        </div>
-
-        <div style="text-align: center;">
-
-            <i class="fa-solid fa-box-archive" style="font-size: 40px; color: #38BDF8; margin-bottom: 20px;"></i>
-
-            <h3 style="color: white;">Local Repo</h3>
-
-            <p style="font-size: 15px;">El historial oficial. Donde se guardan las versiones permanentes (commits).</p>
-
-        </div>
+        <div class="slide-footer">1 / 15</div>
 
     </div>
 
-    <div class="slide-footer">2 / 15</div>
 
-</div>
 
+    <!-- SLIDE 2: LAS 3 ÁREAS -->
 
+    <div class="slide-container" id="slide2">
 
-<!-- SLIDE 3: PASO 1 - INIT -->
+        <h2 class="slide-title">La Arquitectura Local</h2>
 
-<div class="slide-container" id="slide3">
+        <p>Para entender Git, debemos entender que nuestro código vive en tres "estados" o lugares distintos:</p>
 
-    <h2 class="slide-title">Paso 1: Iniciando y Creando</h2>
+        <div class="file-grid" style="margin-top: 40px; gap: 40px;">
 
-    <div class="command-box">$ git init</div>
+            <div style="text-align: center;">
 
-    <p>Creamos el archivo. Git lo ve en el disco, pero aún no lo rastrea (untracked).</p>
+                <i class="fa-solid fa-laptop-code" style="font-size: 40px; color: #38BDF8; margin-bottom: 20px;"></i>
 
-    <div class="file-grid">
+                <h3 style="color: white;">Working Directory</h3>
 
-        <div class="state-column">
+                <p style="font-size: 15px;">Tus archivos físicos. Es el editor donde escribes tu código.</p>
 
-            <div class="state-label">Working Directory</div>
+            </div>
 
-            <div class="file-card active"><div class="code-line active">Edición uno</div></div>
+            <div style="text-align: center;">
 
-        </div>
+                <i class="fa-solid fa-clipboard-list" style="font-size: 40px; color: #38BDF8; margin-bottom: 20px;"></i>
 
-        <div class="state-column">
+                <h3 style="color: white;">Staging Area</h3>
 
-            <div class="state-label">Staging Area</div>
+                <p style="font-size: 15px;">La zona de preparación. Aquí seleccionas qué cambios vas a guardar.</p>
 
-            <div class="file-card"><div class="empty-state">Vacio</div></div>
+            </div>
 
-        </div>
+            <div style="text-align: center;">
 
-        <div class="state-column">
+                <i class="fa-solid fa-box-archive" style="font-size: 40px; color: #38BDF8; margin-bottom: 20px;"></i>
 
-            <div class="state-label">Local Repo</div>
+                <h3 style="color: white;">Local Repo</h3>
 
-            <div class="file-card"><div class="empty-state">Sin historial</div></div>
-
-        </div>
-
-    </div>
-
-    <div class="slide-footer">3 / 15</div>
-
-</div>
-
-
-
-<!-- SLIDE 4: PASO 2 - ADD -->
-
-<div class="slide-container" id="slide4">
-
-    <h2 class="slide-title">Paso 2: Preparando el Archivo</h2>
-
-    <div class="command-box">$ git add archivo.txt</div>
-
-    <p>Copiamos el estado actual al Staging. Estamos listos para "tomar la foto".</p>
-
-    <div class="file-grid">
-
-        <div class="state-column">
-
-            <div class="state-label">Working Directory</div>
-
-            <div class="file-card"><div class="code-line">Edición uno</div></div>
-
-        </div>
-
-        <div class="state-column">
-
-            <div class="state-label">Staging Area</div>
-
-            <div class="file-card active"><div class="code-line new">Edición uno</div></div>
-
-        </div>
-
-        <div class="state-column">
-
-            <div class="state-label">Local Repo</div>
-
-            <div class="file-card"><div class="empty-state">Sin historial</div></div>
-
-        </div>
-
-    </div>
-
-    <div class="slide-footer">4 / 15</div>
-
-</div>
-
-
-
-<!-- SLIDE 5: PASO 3 - COMMIT -->
-
-<div class="slide-container" id="slide5">
-
-    <h2 class="slide-title">Paso 3: Primer Guardado (Commit)</h2>
-
-    <div class="command-box">$ git commit -m "V1"</div>
-
-    <p>Git crea una instantánea permanente en el Repositorio Local.</p>
-
-    <div class="file-grid">
-
-        <div class="state-column">
-
-            <div class="state-label">Working Directory</div>
-
-            <div class="file-card"><div class="code-line">Edición uno</div></div>
-
-        </div>
-
-        <div class="state-column">
-
-            <div class="state-label">Staging Area</div>
-
-            <div class="file-card"><div class="code-line">Edición uno</div></div>
-
-        </div>
-
-        <div class="state-column">
-
-            <div class="state-label">Local Repo</div>
-
-            <div class="file-card success"><div class="code-line active">V1: Edición uno</div></div>
-
-        </div>
-
-    </div>
-
-    <div class="slide-footer">5 / 15</div>
-
-</div>
-
-
-
-<!-- SLIDE 6: PASO 4 - MODIFICAR -->
-
-<div class="slide-container" id="slide6">
-
-    <h2 class="slide-title">Paso 4: Nueva Edición</h2>
-
-    <p>Añadimos una segunda línea. El disco físico cambia, pero el Repo sigue en la V1.</p>
-
-    <div class="file-grid">
-
-        <div class="state-column">
-
-            <div class="state-label">Working Directory</div>
-
-            <div class="file-card active">
-
-                <div class="code-line">Edición uno</div>
-
-                <div class="code-line new">Edición dos</div>
+                <p style="font-size: 15px;">El historial oficial. Donde se guardan las versiones permanentes (commits).
+                </p>
 
             </div>
 
         </div>
 
-        <div class="state-column">
-
-            <div class="state-label">Staging Area</div>
-
-            <div class="file-card"><div class="code-line">Edición uno</div></div>
-
-        </div>
-
-        <div class="state-column">
-
-            <div class="state-label">Local Repo</div>
-
-            <div class="file-card"><div class="code-line">V1: Edición uno</div></div>
-
-        </div>
+        <div class="slide-footer">2 / 15</div>
 
     </div>
 
-    <div class="slide-footer">6 / 15</div>
-
-</div>
 
 
+    <!-- SLIDE 3: PASO 1 - INIT -->
 
-<!-- SLIDE 7: PASO 5 - COMMIT 2 -->
+    <div class="slide-container" id="slide3">
 
-<div class="slide-container" id="slide7">
+        <h2 class="slide-title">Paso 1: Iniciando y Creando</h2>
 
-    <h2 class="slide-title">Paso 5: Consolidando V2</h2>
+        <div class="command-box">$ git init</div>
 
-    <div class="command-box">$ git add archivo.txt && git commit -m "V2"</div>
+        <p>Creamos el archivo. Git lo ve en el disco, pero aún no lo rastrea (untracked).</p>
 
-    <p>Tras añadir y confirmar, el Repositorio Local ahora tiene dos versiones del archivo.</p>
+        <div class="file-grid">
 
-    <div class="file-grid">
+            <div class="state-column">
 
-        <div class="state-column">
+                <div class="state-label">Working Directory</div>
 
-            <div class="state-label">Working Directory</div>
+                <div class="file-card active">
+                    <div class="code-line active">Edición uno</div>
+                </div>
 
-            <div class="file-card"><div class="code-line">Edición uno</div><div class="code-line">Edición dos</div></div>
+            </div>
 
-        </div>
+            <div class="state-column">
 
-        <div class="state-column">
+                <div class="state-label">Staging Area</div>
 
-            <div class="state-label">Staging Area</div>
+                <div class="file-card">
+                    <div class="empty-state">Vacio</div>
+                </div>
 
-            <div class="file-card"><div class="code-line">Edición uno</div><div class="code-line">Edición dos</div></div>
+            </div>
 
-        </div>
+            <div class="state-column">
 
-        <div class="state-column">
+                <div class="state-label">Local Repo</div>
 
-            <div class="state-label">Local Repo</div>
-
-            <div class="file-card success">
-
-                <div class="code-line" style="opacity: 0.5;">V1: Edición uno</div>
-
-                <div class="code-line active">V2: Edición uno, dos</div>
+                <div class="file-card">
+                    <div class="empty-state">Sin historial</div>
+                </div>
 
             </div>
 
         </div>
 
+        <div class="slide-footer">3 / 15</div>
+
     </div>
 
-    <div class="slide-footer">7 / 15</div>
-
-</div>
 
 
+    <!-- SLIDE 4: PASO 2 - ADD -->
 
-<!-- SLIDE 8: SECCIÓN RAMAS -->
+    <div class="slide-container" id="slide4">
 
-<div class="slide-container section-intro" id="slide8">
+        <h2 class="slide-title">Paso 2: Preparando el Archivo</h2>
 
-    <div class="divider" style="background: #A855F7;"></div>
+        <div class="command-box">$ git add archivo.txt</div>
 
-    <h2 style="font-size: 60px; color: #A855F7;">RAMAS Y FUSIÓN</h2>
+        <p>Copiamos el estado actual al Staging. Estamos listos para "tomar la foto".</p>
 
-    <p>Cómo trabajar en paralelo sin afectar la versión estable.</p>
+        <div class="file-grid">
 
-    <div class="slide-footer">8 / 15</div>
+            <div class="state-column">
 
-</div>
+                <div class="state-label">Working Directory</div>
 
+                <div class="file-card">
+                    <div class="code-line">Edición uno</div>
+                </div>
 
+            </div>
 
-<!-- SLIDE 9: PASO 6 - BRANCH -->
+            <div class="state-column">
 
-<div class="slide-container" id="slide9">
+                <div class="state-label">Staging Area</div>
 
-    <h2 class="slide-title">Paso 6: Creando una Rama</h2>
+                <div class="file-card active">
+                    <div class="code-line new">Edición uno</div>
+                </div>
 
-    <div class="command-box" style="border-color: #A855F7; color: #C084FC;">$ git checkout -b feature</div>
+            </div>
 
-    <p>Creamos "feature" y saltamos a ella. El contenido es idéntico a <code>main</code> inicialmente.</p>
+            <div class="state-column">
 
-    <div class="file-grid">
+                <div class="state-label">Local Repo</div>
 
-        <div class="state-column">
-
-            <div class="state-label">Working Directory</div>
-
-            <div class="file-card branch">
-
-                <div class="branch-tag tag-feature">Rama: feature</div>
-
-                <div class="code-line">Edición uno</div><div class="code-line">Edición dos</div>
+                <div class="file-card">
+                    <div class="empty-state">Sin historial</div>
+                </div>
 
             </div>
 
         </div>
 
-        <div class="state-column">
-
-            <div class="state-label">Staging Area</div>
-
-            <div class="file-card"><div class="code-line">Edición uno, dos</div></div>
-
-        </div>
-
-        <div class="state-column">
-
-            <div class="state-label">Local Repo</div>
-
-            <div class="file-card"><div class="code-line">V1, V2</div></div>
-
-        </div>
+        <div class="slide-footer">4 / 15</div>
 
     </div>
 
-    <div class="slide-footer">9 / 15</div>
-
-</div>
 
 
+    <!-- SLIDE 5: PASO 3 - COMMIT -->
 
-<!-- SLIDE 10: TRABAJO EN RAMA -->
+    <div class="slide-container" id="slide5">
 
-<div class="slide-container" id="slide10">
+        <h2 class="slide-title">Paso 3: Primer Guardado (Commit)</h2>
 
-    <h2 class="slide-title">Paso 7: Edición en Paralelo</h2>
+        <div class="command-box">$ git commit -m "V1"</div>
 
-    <p>Añadimos la "Edición tres" solo en la rama <code>feature</code>. El historial de <code>main</code> no se entera.</p>
+        <p>Git crea una instantánea permanente en el Repositorio Local.</p>
 
-    <div class="file-grid">
+        <div class="file-grid">
 
-        <div class="state-column">
+            <div class="state-column">
 
-            <div class="state-label">Working Directory</div>
+                <div class="state-label">Working Directory</div>
 
-            <div class="file-card branch">
+                <div class="file-card">
+                    <div class="code-line">Edición uno</div>
+                </div>
 
-                <div class="branch-tag tag-feature">Rama: feature</div>
+            </div>
 
-                <div class="code-line">Edición uno</div><div class="code-line">Edición dos</div>
+            <div class="state-column">
 
-                <div class="code-line purple">Edición tres (Beta)</div>
+                <div class="state-label">Staging Area</div>
+
+                <div class="file-card">
+                    <div class="code-line">Edición uno</div>
+                </div>
+
+            </div>
+
+            <div class="state-column">
+
+                <div class="state-label">Local Repo</div>
+
+                <div class="file-card success">
+                    <div class="code-line active">V1: Edición uno</div>
+                </div>
 
             </div>
 
         </div>
 
-        <div class="state-column">
-
-            <div class="state-label">Staging Area</div>
-
-            <div class="file-card"><div class="empty-state">Cambio sin preparar</div></div>
-
-        </div>
-
-        <div class="state-column">
-
-            <div class="state-label">Local Repo</div>
-
-            <div class="file-card"><div class="code-line">V2: Edición uno, dos</div></div>
-
-        </div>
+        <div class="slide-footer">5 / 15</div>
 
     </div>
 
-    <div class="slide-footer">10 / 15</div>
-
-</div>
 
 
+    <!-- SLIDE 6: PASO 4 - MODIFICAR -->
 
-<!-- SLIDE 11: MERGE 1 - COMPARACIÓN -->
+    <div class="slide-container" id="slide6">
 
-<div class="slide-container" id="slide11">
+        <h2 class="slide-title">Paso 4: Nueva Edición</h2>
 
-    <h2 class="slide-title">Paso 8.1: La Brecha entre Ramas</h2>
+        <p>Añadimos una segunda línea. El disco físico cambia, pero el Repo sigue en la V1.</p>
 
-    <p>Antes de unir, veamos la diferencia real. Cada rama tiene su propio "mundo" en el Repo.</p>
+        <div class="file-grid">
 
-    
+            <div class="state-column">
 
-    <div class="branch-comparison">
+                <div class="state-label">Working Directory</div>
 
-        <div class="branch-row">
+                <div class="file-card active">
 
-            <div class="branch-tag tag-main">Rama Main</div>
+                    <div class="code-line">Edición uno</div>
 
-            <div class="file-grid" style="margin-top: 0; grid-template-columns: 1fr 1fr 1fr;">
+                    <div class="code-line new">Edición dos</div>
 
-                <div class="file-card" style="min-height: 100px;"><div class="code-line">Edición uno, dos</div></div>
+                </div>
 
-                <div class="file-card" style="min-height: 100px;"><div class="code-line">Edición uno, dos</div></div>
+            </div>
 
-                <div class="file-card" style="min-height: 100px; border-color: #0EA5E9;"><div class="code-line active">V2: E1, E2</div></div>
+            <div class="state-column">
+
+                <div class="state-label">Staging Area</div>
+
+                <div class="file-card">
+                    <div class="code-line">Edición uno</div>
+                </div>
+
+            </div>
+
+            <div class="state-column">
+
+                <div class="state-label">Local Repo</div>
+
+                <div class="file-card">
+                    <div class="code-line">V1: Edición uno</div>
+                </div>
 
             </div>
 
         </div>
 
-        <div class="branch-row" style="border-color: #A855F7;">
+        <div class="slide-footer">6 / 15</div>
 
-            <div class="branch-tag tag-feature">Rama Feature</div>
+    </div>
 
-            <div class="file-grid" style="margin-top: 0; grid-template-columns: 1fr 1fr 1fr;">
 
-                <div class="file-card" style="min-height: 100px; border-color: #A855F7;"><div class="code-line purple">Edición uno, dos, tres</div></div>
 
-                <div class="file-card" style="min-height: 100px; border-color: #A855F7;"><div class="code-line purple">Edición uno, dos, tres</div></div>
+    <!-- SLIDE 7: PASO 5 - COMMIT 2 -->
 
-                <div class="file-card" style="min-height: 100px; border-color: #A855F7;"><div class="code-line active">V3: E1, E2, E3</div></div>
+    <div class="slide-container" id="slide7">
+
+        <h2 class="slide-title">Paso 5: Consolidando V2</h2>
+
+        <div class="command-box">$ git add archivo.txt && git commit -m "V2"</div>
+
+        <p>Tras añadir y confirmar, el Repositorio Local ahora tiene dos versiones del archivo.</p>
+
+        <div class="file-grid">
+
+            <div class="state-column">
+
+                <div class="state-label">Working Directory</div>
+
+                <div class="file-card">
+                    <div class="code-line">Edición uno</div>
+                    <div class="code-line">Edición dos</div>
+                </div>
+
+            </div>
+
+            <div class="state-column">
+
+                <div class="state-label">Staging Area</div>
+
+                <div class="file-card">
+                    <div class="code-line">Edición uno</div>
+                    <div class="code-line">Edición dos</div>
+                </div>
+
+            </div>
+
+            <div class="state-column">
+
+                <div class="state-label">Local Repo</div>
+
+                <div class="file-card success">
+
+                    <div class="code-line" style="opacity: 0.5;">V1: Edición uno</div>
+
+                    <div class="code-line active">V2: Edición uno, dos</div>
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
-
-    <div style="display: flex; justify-content: space-around; margin-top: 20px; color: #475569; font-size: 11px; font-weight: 800;">
-
-        <span>DIRECTORIO DE TRABAJO</span>
-
-        <span>STAGING AREA</span>
-
-        <span>REPOSITORIO LOCAL</span>
+        <div class="slide-footer">7 / 15</div>
 
     </div>
 
-    <div class="slide-footer">11 / 15</div>
-
-</div>
 
 
+    <!-- SLIDE 8: SECCIÓN RAMAS -->
 
-<!-- SLIDE 12: MERGE 2 - CHECKOUT -->
+    <div class="slide-container section-intro" id="slide8">
 
-<div class="slide-container" id="slide12">
+        <div class="divider" style="background: #A855F7;"></div>
 
-    <h2 class="slide-title">Paso 8.2: Volviendo a la Base</h2>
+        <h2 style="font-size: 60px; color: #A855F7;">RAMAS Y FUSIÓN</h2>
 
-    <div class="command-box">$ git checkout main</div>
+        <p>Cómo trabajar en paralelo sin afectar la versión estable.</p>
 
-    <p>Al volver a <code>main</code>, Git limpia tu carpeta. La "Edición tres" desaparece visualmente para mostrar el estado estable.</p>
+        <div class="slide-footer">8 / 15</div>
 
-    <div class="file-grid">
+    </div>
 
-        <div class="state-column">
 
-            <div class="state-label">Working Directory (Actual)</div>
 
-            <div class="file-card active">
+    <!-- SLIDE 9: PASO 6 - BRANCH -->
 
-                <div class="branch-tag tag-main">ACTIVA: main</div>
+    <div class="slide-container" id="slide9">
 
-                <div class="code-line">Edición uno</div>
+        <h2 class="slide-title">Paso 6: Creando una Rama</h2>
 
-                <div class="code-line">Edición dos</div>
+        <div class="command-box" style="border-color: #A855F7; color: #C084FC;">$ git checkout -b feature</div>
+
+        <p>Creamos "feature" y saltamos a ella. El contenido es idéntico a <code>main</code> inicialmente.</p>
+
+        <div class="file-grid">
+
+            <div class="state-column">
+
+                <div class="state-label">Working Directory</div>
+
+                <div class="file-card branch">
+
+                    <div class="branch-tag tag-feature">Rama: feature</div>
+
+                    <div class="code-line">Edición uno</div>
+                    <div class="code-line">Edición dos</div>
+
+                </div>
+
+            </div>
+
+            <div class="state-column">
+
+                <div class="state-label">Staging Area</div>
+
+                <div class="file-card">
+                    <div class="code-line">Edición uno, dos</div>
+                </div>
+
+            </div>
+
+            <div class="state-column">
+
+                <div class="state-label">Local Repo</div>
+
+                <div class="file-card">
+                    <div class="code-line">V1, V2</div>
+                </div>
 
             </div>
 
         </div>
 
-        <div class="state-column" style="justify-content: center; text-align: center;">
-
-            <i class="fa-solid fa-arrow-left-long fa-3x" style="color: #38BDF8;"></i>
-
-            <p style="font-size: 14px; margin-top: 10px;">Git restauró los archivos al estado de Main.</p>
-
-        </div>
-
-        <div class="state-column">
-
-            <div class="state-label">Local Repo</div>
-
-            <div class="file-card success"><div class="code-line active">V2: Edición uno, dos</div></div>
-
-        </div>
+        <div class="slide-footer">9 / 15</div>
 
     </div>
 
-    <div class="slide-footer">12 / 15</div>
-
-</div>
 
 
+    <!-- SLIDE 10: TRABAJO EN RAMA -->
 
-<!-- SLIDE 13: MERGE 3 - FUSIÓN -->
+    <div class="slide-container" id="slide10">
 
-<div class="slide-container" id="slide13">
+        <h2 class="slide-title">Paso 7: Edición en Paralelo</h2>
 
-    <h2 class="slide-title">Paso 8.3: El Comando Merge</h2>
+        <p>Añadimos la "Edición tres" solo en la rama <code>feature</code>. El historial de <code>main</code> no se
+            entera.</p>
 
-    <div class="command-box">$ git merge feature</div>
+        <div class="file-grid">
 
-    <p>Git trae los commits de <code>feature</code> a <code>main</code>. Los archivos se actualizan con la nueva información.</p>
+            <div class="state-column">
 
-    <div class="file-grid">
+                <div class="state-label">Working Directory</div>
 
-        <div class="state-column">
+                <div class="file-card branch">
 
-            <div class="state-label">Working Directory</div>
+                    <div class="branch-tag tag-feature">Rama: feature</div>
 
-            <div class="file-card success">
+                    <div class="code-line">Edición uno</div>
+                    <div class="code-line">Edición dos</div>
 
-                <div class="branch-tag tag-main">main</div>
+                    <div class="code-line purple">Edición tres (Beta)</div>
 
-                <div class="code-line">Edición uno</div>
+                </div>
 
-                <div class="code-line">Edición dos</div>
+            </div>
 
-                <div class="code-line new">Edición tres (Beta)</div>
+            <div class="state-column">
+
+                <div class="state-label">Staging Area</div>
+
+                <div class="file-card">
+                    <div class="empty-state">Cambio sin preparar</div>
+                </div>
+
+            </div>
+
+            <div class="state-column">
+
+                <div class="state-label">Local Repo</div>
+
+                <div class="file-card">
+                    <div class="code-line">V2: Edición uno, dos</div>
+                </div>
 
             </div>
 
         </div>
 
-        <div class="state-column" style="justify-content: center; text-align: center;">
+        <div class="slide-footer">10 / 15</div>
 
-            <i class="fa-solid fa-code-merge fa-3x" style="color: #4ADE80;"></i>
+    </div>
 
-            <p style="font-size: 14px; margin-top: 10px;">Fusión exitosa: V3 ahora es parte de Main.</p>
 
-        </div>
 
-        <div class="state-column">
+    <!-- SLIDE 11: MERGE 1 - COMPARACIÓN -->
 
-            <div class="state-label">Local Repo</div>
+    <div class="slide-container" id="slide11">
 
-            <div class="file-card success">
+        <h2 class="slide-title">Paso 8.1: La Brecha entre Ramas</h2>
 
-                <div class="code-line" style="opacity: 0.5;">V1, V2</div>
+        <p>Antes de unir, veamos la diferencia real. Cada rama tiene su propio "mundo" en el Repo.</p>
 
-                <div class="code-line new">V3: Edición tres</div>
+
+
+        <div class="branch-comparison">
+
+            <div class="branch-row">
+
+                <div class="branch-tag tag-main">Rama Main</div>
+
+                <div class="file-grid" style="margin-top: 0; grid-template-columns: 1fr 1fr 1fr;">
+
+                    <div class="file-card" style="min-height: 100px;">
+                        <div class="code-line">Edición uno, dos</div>
+                    </div>
+
+                    <div class="file-card" style="min-height: 100px;">
+                        <div class="code-line">Edición uno, dos</div>
+                    </div>
+
+                    <div class="file-card" style="min-height: 100px; border-color: #0EA5E9;">
+                        <div class="code-line active">V2: E1, E2</div>
+                    </div>
+
+                </div>
+
+            </div>
+
+            <div class="branch-row" style="border-color: #A855F7;">
+
+                <div class="branch-tag tag-feature">Rama Feature</div>
+
+                <div class="file-grid" style="margin-top: 0; grid-template-columns: 1fr 1fr 1fr;">
+
+                    <div class="file-card" style="min-height: 100px; border-color: #A855F7;">
+                        <div class="code-line purple">Edición uno, dos, tres</div>
+                    </div>
+
+                    <div class="file-card" style="min-height: 100px; border-color: #A855F7;">
+                        <div class="code-line purple">Edición uno, dos, tres</div>
+                    </div>
+
+                    <div class="file-card" style="min-height: 100px; border-color: #A855F7;">
+                        <div class="code-line active">V3: E1, E2, E3</div>
+                    </div>
+
+                </div>
 
             </div>
 
         </div>
 
+        <div
+            style="display: flex; justify-content: space-around; margin-top: 20px; color: #475569; font-size: 11px; font-weight: 800;">
+
+            <span>DIRECTORIO DE TRABAJO</span>
+
+            <span>STAGING AREA</span>
+
+            <span>REPOSITORIO LOCAL</span>
+
+        </div>
+
+        <div class="slide-footer">11 / 15</div>
+
     </div>
 
-    <div class="slide-footer">13 / 15</div>
-
-</div>
 
 
+    <!-- SLIDE 12: MERGE 2 - CHECKOUT -->
 
-<!-- SLIDE 14: ESTADO FINAL -->
+    <div class="slide-container" id="slide12">
 
-<div class="slide-container" id="slide14">
+        <h2 class="slide-title">Paso 8.2: Volviendo a la Base</h2>
 
-    <h2 class="slide-title">Resumen de Sincronización</h2>
+        <div class="command-box">$ git checkout main</div>
 
-    <p>Ahora ambas ramas apuntan al mismo historial. El trabajo experimental es oficial.</p>
+        <p>Al volver a <code>main</code>, Git limpia tu carpeta. La "Edición tres" desaparece visualmente para mostrar
+            el estado estable.</p>
 
-    <div class="branch-comparison" style="margin-top: 40px;">
+        <div class="file-grid">
 
-        <div class="branch-row" style="border-color: #4ADE80; background: rgba(74, 222, 128, 0.05);">
+            <div class="state-column">
 
-            <div class="branch-tag" style="background: #4ADE80; color: #020617;">Main</div>
+                <div class="state-label">Working Directory (Actual)</div>
 
-            <div style="font-family: 'Fira Code'; font-size: 16px; color: #4ADE80;">
+                <div class="file-card active">
 
-                <i class="fa-solid fa-check-double"></i> Edición uno, dos y tres [V3]
+                    <div class="branch-tag tag-main">ACTIVA: main</div>
+
+                    <div class="code-line">Edición uno</div>
+
+                    <div class="code-line">Edición dos</div>
+
+                </div>
+
+            </div>
+
+            <div class="state-column" style="justify-content: center; text-align: center;">
+
+                <i class="fa-solid fa-arrow-left-long fa-3x" style="color: #38BDF8;"></i>
+
+                <p style="font-size: 14px; margin-top: 10px;">Git restauró los archivos al estado de Main.</p>
+
+            </div>
+
+            <div class="state-column">
+
+                <div class="state-label">Local Repo</div>
+
+                <div class="file-card success">
+                    <div class="code-line active">V2: Edición uno, dos</div>
+                </div>
 
             </div>
 
         </div>
 
-        <div class="branch-row" style="border-color: #4ADE80; background: rgba(74, 222, 128, 0.05);">
+        <div class="slide-footer">12 / 15</div>
 
-            <div class="branch-tag" style="background: #4ADE80; color: #020617;">Feature</div>
+    </div>
 
-            <div style="font-family: 'Fira Code'; font-size: 16px; color: #4ADE80;">
 
-                <i class="fa-solid fa-check-double"></i> Edición uno, dos y tres [V3]
+
+    <!-- SLIDE 13: MERGE 3 - FUSIÓN -->
+
+    <div class="slide-container" id="slide13">
+
+        <h2 class="slide-title">Paso 8.3: El Comando Merge</h2>
+
+        <div class="command-box">$ git merge feature</div>
+
+        <p>Git trae los commits de <code>feature</code> a <code>main</code>. Los archivos se actualizan con la nueva
+            información.</p>
+
+        <div class="file-grid">
+
+            <div class="state-column">
+
+                <div class="state-label">Working Directory</div>
+
+                <div class="file-card success">
+
+                    <div class="branch-tag tag-main">main</div>
+
+                    <div class="code-line">Edición uno</div>
+
+                    <div class="code-line">Edición dos</div>
+
+                    <div class="code-line new">Edición tres (Beta)</div>
+
+                </div>
+
+            </div>
+
+            <div class="state-column" style="justify-content: center; text-align: center;">
+
+                <i class="fa-solid fa-code-merge fa-3x" style="color: #4ADE80;"></i>
+
+                <p style="font-size: 14px; margin-top: 10px;">Fusión exitosa: V3 ahora es parte de Main.</p>
+
+            </div>
+
+            <div class="state-column">
+
+                <div class="state-label">Local Repo</div>
+
+                <div class="file-card success">
+
+                    <div class="code-line" style="opacity: 0.5;">V1, V2</div>
+
+                    <div class="code-line new">V3: Edición tres</div>
+
+                </div>
 
             </div>
 
         </div>
 
-    </div>
-
-    <div class="slide-footer">14 / 15</div>
-
-</div>
-
-
-
-<!-- SLIDE 15: DESPEDIDA -->
-
-<div class="slide-container section-intro" id="slide15">
-
-    <h2 style="font-size: 60px;">¡FELICIDADES!</h2>
-
-    <p>Has dominado el flujo visual de Git.</p>
-
-    <div style="margin-top: 40px; color: #64748B;">
-
-        <p><i class="fa-solid fa-circle-info"></i> Próximos pasos: Repositorios Remotos (GitHub).</p>
+        <div class="slide-footer">13 / 15</div>
 
     </div>
 
-    <div class="slide-footer">15 / 15</div>
-
-</div>
 
 
+    <!-- SLIDE 14: ESTADO FINAL -->
 
-<!-- CONTROLES -->
+    <div class="slide-container" id="slide14">
 
-<div class="nav-controls">
+        <h2 class="slide-title">Resumen de Sincronización</h2>
 
-    <button class="nav-btn" id="prevBtn" title="Anterior (Flecha Izquierda)"><i class="fa-solid fa-arrow-left"></i></button>
+        <p>Ahora ambas ramas apuntan al mismo historial. El trabajo experimental es oficial.</p>
 
-    <button class="nav-btn" id="nextBtn" title="Siguiente (Flecha Derecha / Espacio)"><i class="fa-solid fa-arrow-right"></i></button>
+        <div class="branch-comparison" style="margin-top: 40px;">
 
-</div>
+            <div class="branch-row" style="border-color: #4ADE80; background: rgba(74, 222, 128, 0.05);">
 
+                <div class="branch-tag" style="background: #4ADE80; color: #020617;">Main</div>
 
+                <div style="font-family: 'Fira Code'; font-size: 16px; color: #4ADE80;">
 
-<script>
+                    <i class="fa-solid fa-check-double"></i> Edición uno, dos y tres [V3]
 
-    let currentSlideIndex = 0;
+                </div>
 
-    const slides = document.querySelectorAll('.slide-container');
+            </div>
 
-    const totalSlides = slides.length;
+            <div class="branch-row" style="border-color: #4ADE80; background: rgba(74, 222, 128, 0.05);">
 
+                <div class="branch-tag" style="background: #4ADE80; color: #020617;">Feature</div>
 
+                <div style="font-family: 'Fira Code'; font-size: 16px; color: #4ADE80;">
 
-    function showSlide(index) {
+                    <i class="fa-solid fa-check-double"></i> Edición uno, dos y tres [V3]
 
-        // Limitar índices
+                </div>
 
-        if (index < 0) index = 0;
+            </div>
 
-        if (index >= totalSlides) index = totalSlides - 1;
+        </div>
 
+        <div class="slide-footer">14 / 15</div>
 
-
-        // Quitar clase activa de todos
-
-        slides.forEach(slide => slide.classList.remove('active-slide'));
-
-        
-
-        // Añadir clase activa al actual
-
-        slides[index].classList.add('active-slide');
-
-        currentSlideIndex = index;
-
-    }
+    </div>
 
 
 
-    // Eventos de teclado
+    <!-- SLIDE 15: DESPEDIDA -->
 
-    document.addEventListener('keydown', (e) => {
+    <div class="slide-container section-intro" id="slide15">
 
-        if (e.key === 'ArrowRight' || e.key === ' ') {
+        <h2 style="font-size: 60px;">¡FELICIDADES!</h2>
 
-            showSlide(currentSlideIndex + 1);
+        <p>Has dominado el flujo visual de Git.</p>
 
-        } else if (e.key === 'ArrowLeft') {
+        <div style="margin-top: 40px; color: #64748B;">
 
-            showSlide(currentSlideIndex - 1);
+            <p><i class="fa-solid fa-circle-info"></i> Próximos pasos: Repositorios Remotos (GitHub).</p>
+
+        </div>
+
+        <div class="slide-footer">15 / 15</div>
+
+    </div>
+
+
+
+    <!-- CONTROLES -->
+
+    <div class="nav-controls">
+
+        <button class="nav-btn" id="prevBtn" title="Anterior (Flecha Izquierda)"><i
+                class="fa-solid fa-arrow-left"></i></button>
+
+        <button class="nav-btn" id="nextBtn" title="Siguiente (Flecha Derecha / Espacio)"><i
+                class="fa-solid fa-arrow-right"></i></button>
+
+    </div>
+
+
+
+    <script>
+
+        let currentSlideIndex = 0;
+
+        const slides = document.querySelectorAll('.slide-container');
+
+        const totalSlides = slides.length;
+
+
+
+        function showSlide(index) {
+
+            // Limitar índices
+
+            if (index < 0) index = 0;
+
+            if (index >= totalSlides) index = totalSlides - 1;
+
+
+
+            // Quitar clase activa de todos
+
+            slides.forEach(slide => slide.classList.remove('active-slide'));
+
+
+
+            // Añadir clase activa al actual
+
+            slides[index].classList.add('active-slide');
+
+            currentSlideIndex = index;
 
         }
 
-    });
+
+
+        // Eventos de teclado
+
+        document.addEventListener('keydown', (e) => {
+
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+
+                showSlide(currentSlideIndex + 1);
+
+            } else if (e.key === 'ArrowLeft') {
+
+                showSlide(currentSlideIndex - 1);
+
+            }
+
+        });
 
 
 
-    // Eventos de botones
+        // Eventos de botones
 
-    document.getElementById('prevBtn').addEventListener('click', () => showSlide(currentSlideIndex - 1));
+        document.getElementById('prevBtn').addEventListener('click', () => showSlide(currentSlideIndex - 1));
 
-    document.getElementById('nextBtn').addEventListener('click', () => showSlide(currentSlideIndex + 1));
+        document.getElementById('nextBtn').addEventListener('click', () => showSlide(currentSlideIndex + 1));
 
 
 
-    // Inicializar
+        // Inicializar
 
-    showSlide(0);
+        showSlide(0);
 
-</script>
+    </script>
 
 
 
