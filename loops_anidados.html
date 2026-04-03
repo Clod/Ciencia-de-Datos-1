@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador de Bucles Python - Llenado de Botellas</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            primary: '#0ea5e9',
+                            secondary: '#6366f1',
+                            accent: '#14b8a6',
+                            dark: '#0f172a',
+                            light: '#f8fafc',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-fast': 'pulse 1s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .code-highlight {
+            background-color: rgba(14, 165, 233, 0.2);
+            border-left: 4px solid #0ea5e9;
+            transition: all 0.2s ease-in-out;
+        }
+        .liquid-fill {
+            transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .bottle-container {
+            position: relative;
+            height: 240px;
+            width: 80px;
+            border: 4px solid #94a3b8;
+            border-top: none;
+            border-radius: 0 0 12px 12px;
+            background: rgba(255, 255, 255, 0.05);
+            overflow: hidden;
+        }
+        .bottle-neck {
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 40px;
+            border: 4px solid #94a3b8;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+        }
+        .glow-active {
+            box-shadow: 0 0 20px rgba(20, 184, 166, 0.5);
+            border-color: #14b8a6 !important;
+        }
+    </style>
+</head>
+<body class="bg-brand-dark text-brand-light min-h-screen font-sans selection:bg-brand-primary selection:text-white">
+
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <header class="text-center mb-12">
+            <h1 class="text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-brand-primary to-brand-accent mb-4">
+                Python Loop Visualizer
+            </h1>
+            <p class="text-slate-400 text-lg">Explora el funcionamiento de los bucles anidados paso a paso</p>
+        </header>
+
+        <main class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            
+            <!-- Left Column: Visualization Panel -->
+            <section class="lg:col-span-7 flex flex-col gap-6">
+                <div class="glass rounded-3xl p-8 flex-grow flex flex-col items-center justify-center relative overflow-hidden">
+                    
+                    <!-- Base Image Placeholder / Canvas Overlay -->
+                    <div id="visualization-area" class="w-full h-full min-h-[400px] flex flex-col items-center justify-center relative">
+                        
+                        <!-- The "Real World Image" contextually integrated -->
+                        <div class="absolute inset-0 opacity-10 flex items-center justify-center pointer-events-none">
+                            <img src='https://opal.google/board/blobs/59a24b3d-79f1-4402-914b-223d59a0b007' alt='Caja de Producción' class="w-full h-full object-cover rounded-2xl" />
+                        </div>
+
+                        <!-- Label for State -->
+                        <div id="status-label" class="absolute top-4 left-4 px-4 py-2 rounded-full bg-brand-primary/20 border border-brand-primary/30 text-brand-primary font-semibold uppercase tracking-wider text-sm">
+                            ESTADO: LISTO
+                        </div>
+
+                        <!-- 3 Bottles for Nested Loop Visualization -->
+                        <div class="flex gap-12 mt-10">
+                            <!-- Bottle 1 -->
+                            <div id="bottle-container-0" class="flex flex-col items-center group">
+                                <div class="relative bottle-container" id="bottle-0">
+                                    <div class="bottle-neck"></div>
+                                    <div id="fill-0" class="liquid-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-brand-accent to-sky-400 h-0"></div>
+                                </div>
+                                <span class="mt-4 font-bold text-slate-400 group-[.active]:text-brand-accent">Botella 0</span>
+                            </div>
+                            
+                            <!-- Bottle 2 -->
+                            <div id="bottle-container-1" class="flex flex-col items-center group">
+                                <div class="relative bottle-container" id="bottle-1">
+                                    <div class="bottle-neck"></div>
+                                    <div id="fill-1" class="liquid-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-brand-accent to-sky-400 h-0"></div>
+                                </div>
+                                <span class="mt-4 font-bold text-slate-400 group-[.active]:text-brand-accent">Botella 1</span>
+                            </div>
+
+                            <!-- Bottle 3 -->
+                            <div id="bottle-container-2" class="flex flex-col items-center group">
+                                <div class="relative bottle-container" id="bottle-2">
+                                    <div class="bottle-neck"></div>
+                                    <div id="fill-2" class="liquid-fill absolute bottom-0 left-0 w-full bg-gradient-to-t from-brand-accent to-sky-400 h-0"></div>
+                                </div>
+                                <span class="mt-4 font-bold text-slate-400 group-[.active]:text-brand-accent">Botella 2</span>
+                            </div>
+                        </div>
+
+                        <!-- Info Overlay -->
+                        <div id="info-overlay" class="absolute bottom-4 right-4 font-mono text-brand-accent bg-brand-dark/80 px-4 py-2 rounded-lg border border-brand-accent/20">
+                            Paso: 0 / 12
+                        </div>
+
+                        <!-- Digital Stamp for Completion -->
+                        <div id="completion-stamp" class="hidden absolute inset-0 flex items-center justify-center pointer-events-none">
+                            <div class="border-8 border-brand-accent text-brand-accent text-6xl font-black px-12 py-6 rotate-[-12deg] rounded-3xl animate-bounce">
+                                ¡CARGA COMPLETA!
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Controls -->
+                    <div class="w-full flex items-center justify-between mt-8 border-t border-slate-700/50 pt-6">
+                        <button onclick="changeStep(-1)" id="prevBtn" class="px-6 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 transition text-slate-300 font-semibold flex items-center gap-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                            Anterior
+                        </button>
+                        
+                        <button onclick="resetProcess()" class="px-6 py-3 rounded-xl bg-orange-500/20 text-orange-400 border border-orange-500/30 hover:bg-orange-500 hover:text-white transition font-bold uppercase tracking-tighter">
+                            Reiniciar
+                        </button>
+
+                        <button onclick="changeStep(1)" id="nextBtn" class="px-8 py-3 rounded-xl bg-brand-accent hover:bg-brand-accent/80 text-brand-dark transition font-bold flex items-center gap-2">
+                            Siguiente
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Column: Code Editor Panel -->
+            <aside class="lg:col-span-5 flex flex-col">
+                <div class="glass rounded-3xl p-6 flex-grow flex flex-col overflow-hidden">
+                    <div class="flex items-center gap-2 mb-4 border-b border-slate-700 pb-4">
+                        <div class="flex gap-1.5">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                        </div>
+                        <span class="text-xs font-mono text-slate-400 ml-2 italic">main.py</span>
+                    </div>
+
+                    <div class="relative overflow-auto flex-grow font-mono text-sm sm:text-base">
+                        <pre id="code-block" class="leading-relaxed"><div id="line-1" class="px-4 py-1">botellas = 3</div><div id="line-2" class="px-4 py-1">pasos_llenado = 3</div><div id="line-3" class="px-4 py-1"></div><div id="line-4" class="px-4 py-1 text-slate-500"># Bucle exterior: cada botella</div><div id="line-5" class="px-4 py-1"><span class="text-brand-secondary">for</span> i <span class="text-brand-secondary">in</span> range(botellas):</div><div id="line-6" class="px-4 py-1 pl-8 text-slate-500"># Bucle interior: progreso de llenado</div><div id="line-7" class="px-4 py-1 pl-8">    <span class="text-brand-secondary">for</span> j <span class="text-brand-secondary">in</span> range(1, pasos_llenado + 1):</div><div id="line-8" class="px-4 py-1 pl-16">        nivel = (j / pasos_llenado) * 100</div><div id="line-9" class="px-4 py-1 pl-16">        print(<span class="text-brand-accent">f"Botella {i}: {nivel}%"</span>)</div><div id="line-10" class="px-4 py-1"></div><div id="line-11" class="px-4 py-1">print(<span class="text-brand-accent">"¡Proceso finalizado!"</span>)</div></pre>
+                    </div>
+
+                    <div class="mt-6 bg-brand-dark/50 rounded-xl p-4 border border-slate-700/50">
+                        <p class="text-xs font-bold text-slate-500 mb-2 uppercase tracking-widest">Salida de Consola</p>
+                        <div id="console-output" class="font-mono text-brand-accent/80 text-sm h-20 overflow-y-auto">
+                            > Sistema iniciado...
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+        </main>
+    </div>
+
+    <script>
+        // State variables
+        let currentStep = 0;
+        
+        // Define visualization steps
+        // Total steps = Setup(1) + [3 botellas * 3 pasos filling] + Final(1) = 11 steps effectively
+        const steps = [
+            { line: 1, status: "INICIALIZANDO", bottleIdx: -1, level: 0, msg: "Configurando dimensiones..." },
+            { line: 5, status: "BUCLE EXTERIOR", bottleIdx: 0, level: 0, msg: "Iniciando Botella 0" },
+            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 0, level: 33, msg: "Llenando Botella 0 (Paso 1)" },
+            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 0, level: 66, msg: "Llenando Botella 0 (Paso 2)" },
+            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 0, level: 100, msg: "Llenando Botella 0 (Completo)" },
+            { line: 5, status: "BUCLE EXTERIOR", bottleIdx: 1, level: 0, msg: "Iniciando Botella 1" },
+            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 1, level: 33, msg: "Llenando Botella 1 (Paso 1)" },
+            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 1, level: 66, msg: "Llenando Botella 1 (Paso 2)" },
+            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 1, level: 100, msg: "Llenando Botella 1 (Completo)" },
+            { line: 5, status: "BUCLE EXTERIOR", bottleIdx: 2, level: 0, msg: "Iniciando Botella 2" },
+            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 2, level: 33, msg: "Llenando Botella 2 (Paso 1)" },
+            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 2, level: 66, msg: "Llenando Botella 2 (Paso 2)" },
+            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 2, level: 100, msg: "Llenando Botella 2 (Completo)" },
+            { line: 11, status: "TERMINANDO", bottleIdx: -1, level: 100, msg: "¡Proceso finalizado!" }
+        ];
+
+        function updateUI() {
+            const step = steps[currentStep];
+            
+            // 1. Update Status Label
+            document.getElementById('status-label').innerText = `ESTADO: ${step.status}`;
+            
+            // 2. Update Info Overlay
+            document.getElementById('info-overlay').innerText = `Paso: ${currentStep} / ${steps.length - 1}`;
+
+            // 3. Update Visual Bottles
+            // First, reset all highlighting
+            for(let i=0; i<3; i++) {
+                document.getElementById(`bottle-${i}`).classList.remove('glow-active');
+                document.getElementById(`bottle-container-${i}`).classList.remove('active');
+            }
+
+            // Fill bottles based on current step history
+            // We look at the history to keep previous bottles full
+            const fillStates = [0, 0, 0];
+            for (let s = 0; s <= currentStep; s++) {
+                const st = steps[s];
+                if (st.bottleIdx !== -1) {
+                    fillStates[st.bottleIdx] = Math.max(fillStates[st.bottleIdx], st.level);
+                }
+            }
+
+            fillStates.forEach((level, idx) => {
+                document.getElementById(`fill-${idx}`).style.height = `${level}%`;
+            });
+
+            // Highlight current bottle if applicable
+            if (step.bottleIdx !== -1) {
+                document.getElementById(`bottle-${step.bottleIdx}`).classList.add('glow-active');
+                document.getElementById(`bottle-container-${step.bottleIdx}`).classList.add('active');
+            }
+
+            // 4. Update Code Highlighting
+            document.querySelectorAll('#code-block > div').forEach(el => el.classList.remove('code-highlight'));
+            const activeLine = document.getElementById(`line-${step.line}`);
+            if (activeLine) activeLine.classList.add('code-highlight');
+
+            // 5. Update Console
+            const consoleEl = document.getElementById('console-output');
+            if (currentStep === 0) {
+                consoleEl.innerHTML = `> ${step.msg}`;
+            } else {
+                consoleEl.innerHTML += `<br>> ${step.msg}`;
+            }
+            consoleEl.scrollTop = consoleEl.scrollHeight;
+
+            // 6. Handle Completion Stamp
+            const stamp = document.getElementById('completion-stamp');
+            if (step.status === "TERMINANDO") {
+                stamp.classList.remove('hidden');
+            } else {
+                stamp.classList.add('hidden');
+            }
+
+            // 7. Button States
+            document.getElementById('prevBtn').disabled = currentStep === 0;
+            document.getElementById('prevBtn').style.opacity = currentStep === 0 ? '0.5' : '1';
+            document.getElementById('nextBtn').disabled = currentStep === steps.length - 1;
+            document.getElementById('nextBtn').style.opacity = currentStep === steps.length - 1 ? '0.5' : '1';
+        }
+
+        function changeStep(dir) {
+            const next = currentStep + dir;
+            if (next >= 0 && next < steps.length) {
+                // If moving backwards, clear console and rebuild
+                if (dir < 0) {
+                    const targetStep = currentStep - 1;
+                    currentStep = 0;
+                    document.getElementById('console-output').innerHTML = "> Reiniciando vista...";
+                    updateUI();
+                    while(currentStep < targetStep) {
+                        currentStep++;
+                        updateUI();
+                    }
+                } else {
+                    currentStep = next;
+                    updateUI();
+                }
+            }
+        }
+
+        function resetProcess() {
+            currentStep = 0;
+            document.getElementById('console-output').innerHTML = "> Reiniciando sistema...";
+            updateUI();
+        }
+
+        // Initialize
+        updateUI();
+    </script>
+</body>
+</html>
