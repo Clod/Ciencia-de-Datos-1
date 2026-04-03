@@ -201,17 +201,17 @@
         const steps = [
             { line: 1, status: "INICIALIZANDO", bottleIdx: -1, level: 0, msg: "Configurando dimensiones..." },
             { line: 5, status: "BUCLE EXTERIOR", bottleIdx: 0, level: 0, msg: "Iniciando Botella 0" },
-            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 0, level: 33, msg: "Llenando Botella 0 (Paso 1)" },
-            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 0, level: 66, msg: "Llenando Botella 0 (Paso 2)" },
-            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 0, level: 100, msg: "Llenando Botella 0 (Completo)" },
+            { line: 8, status: "BUCLE INTERIOR", bottleIdx: 0, level: 33, msg: "Llenando Botella 0 (Paso 1)" },
+            { line: 9, status: "BUCLE INTERIOR", bottleIdx: 0, level: 66, msg: "Llenando Botella 0 (Paso 2)" },
+            { line: 8, status: "BUCLE INTERIOR", bottleIdx: 0, level: 100, msg: "Llenando Botella 0 (Completo)" },
             { line: 5, status: "BUCLE EXTERIOR", bottleIdx: 1, level: 0, msg: "Iniciando Botella 1" },
-            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 1, level: 33, msg: "Llenando Botella 1 (Paso 1)" },
-            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 1, level: 66, msg: "Llenando Botella 1 (Paso 2)" },
-            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 1, level: 100, msg: "Llenando Botella 1 (Completo)" },
+            { line: 8, status: "BUCLE INTERIOR", bottleIdx: 1, level: 33, msg: "Llenando Botella 1 (Paso 1)" },
+            { line: 9, status: "BUCLE INTERIOR", bottleIdx: 1, level: 66, msg: "Llenando Botella 1 (Paso 2)" },
+            { line: 8, status: "BUCLE INTERIOR", bottleIdx: 1, level: 100, msg: "Llenando Botella 1 (Completo)" },
             { line: 5, status: "BUCLE EXTERIOR", bottleIdx: 2, level: 0, msg: "Iniciando Botella 2" },
-            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 2, level: 33, msg: "Llenando Botella 2 (Paso 1)" },
-            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 2, level: 66, msg: "Llenando Botella 2 (Paso 2)" },
-            { line: 7, status: "BUCLE INTERIOR", bottleIdx: 2, level: 100, msg: "Llenando Botella 2 (Completo)" },
+            { line: 8, status: "BUCLE INTERIOR", bottleIdx: 2, level: 33, msg: "Llenando Botella 2 (Paso 1)" },
+            { line: 9, status: "BUCLE INTERIOR", bottleIdx: 2, level: 66, msg: "Llenando Botella 2 (Paso 2)" },
+            { line: 8, status: "BUCLE INTERIOR", bottleIdx: 2, level: 100, msg: "Llenando Botella 2 (Completo)" },
             { line: 11, status: "TERMINANDO", bottleIdx: -1, level: 100, msg: "¡Proceso finalizado!" }
         ];
 
@@ -232,16 +232,27 @@
             }
 
             // Fill bottles based on current step history
-            // We look at the history to keep previous bottles full
+            // The fill level updates AFTER line 8 executes, so when line 8 is shown,
+            // we still display the previous level (line 9 will show the new one)
             const fillStates = [0, 0, 0];
+            let prevLevel = [0, 0, 0];
+
             for (let s = 0; s <= currentStep; s++) {
                 const st = steps[s];
                 if (st.bottleIdx !== -1) {
+                    prevLevel[st.bottleIdx] = fillStates[st.bottleIdx];
                     fillStates[st.bottleIdx] = Math.max(fillStates[st.bottleIdx], st.level);
                 }
             }
 
-            fillStates.forEach((level, idx) => {
+            // When current line is 8 (nivel assignment), show previous level (fill hasn't updated yet)
+            // When current line is 9 (print), show the new level (fill just updated)
+            const displayLevels = [...fillStates];
+            if (step.line === 8) {
+                displayLevels[step.bottleIdx] = prevLevel[step.bottleIdx];
+            }
+
+            displayLevels.forEach((level, idx) => {
                 document.getElementById(`fill-${idx}`).style.height = `${level}%`;
             });
 
