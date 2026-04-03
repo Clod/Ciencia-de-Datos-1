@@ -212,7 +212,8 @@
             { line: 8, status: "BUCLE INTERIOR", bottleIdx: 2, level: 33, msg: "Llenando Botella 2 (Paso 1)" },
             { line: 9, status: "BUCLE INTERIOR", bottleIdx: 2, level: 66, msg: "Llenando Botella 2 (Paso 2)" },
             { line: 8, status: "BUCLE INTERIOR", bottleIdx: 2, level: 100, msg: "Llenando Botella 2 (Completo)" },
-            { line: 11, status: "TERMINANDO", bottleIdx: -1, level: 100, msg: "¡Proceso finalizado!" }
+            { line: 11, status: "TERMINANDO", bottleIdx: -1, level: 100, msg: "¡Proceso finalizado!", showStamp: false },
+            { line: -1, status: "COMPLETADO", bottleIdx: -1, level: 100, msg: "¡Proceso finalizado!", showStamp: true }
         ];
 
         function updateUI() {
@@ -278,7 +279,7 @@
 
             // 6. Handle Completion Stamp
             const stamp = document.getElementById('completion-stamp');
-            if (step.status === "TERMINANDO") {
+            if (step.showStamp) {
                 stamp.classList.remove('hidden');
             } else {
                 stamp.classList.add('hidden');
