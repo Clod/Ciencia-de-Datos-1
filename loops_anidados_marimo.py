@@ -54,23 +54,36 @@ def _():
 
 
 @app.cell
-def _(mo, steps):
-    get_step, set_step = mo.state(0)
+def _(mo):
+    get_step, set_step = mo.state(0, allow_self_loops=True)
+    return (get_step, set_step)
+
+
+@app.cell
+def _(get_step, mo, set_step, steps):
 
     def increment(_):
-        if get_step() < len(steps) - 1:
-            set_step(get_step() + 1)
+        set_step(lambda v: v + 1 if v < len(steps) - 1 else v)
 
     def decrement(_):
-        if get_step() > 0:
-            set_step(get_step() - 1)
+        set_step(lambda v: v - 1 if v > 0 else v)
 
     def reset(_):
         set_step(0)
 
-    prev_btn = mo.ui.button(label="⬅️ Anterior", on_click=decrement, disabled=get_step() == 0)
-    next_btn = mo.ui.button(label="Siguiente ➡️", on_click=increment, disabled=get_step() == len(steps) - 1, kind="success")
-    reset_btn = mo.ui.button(label="🔄 Reiniciar", on_click=reset)
+    prev_btn = mo.ui.button(
+        label="⬅️ Anterior", 
+        on_click=lambda _: set_step(lambda v: v - 1 if v > 0 else v), 
+        disabled=get_step() == 0,
+        kind="neutral"
+    )
+    next_btn = mo.ui.button(
+        label="Siguiente ➡️", 
+        on_click=lambda _: set_step(lambda v: v + 1 if v < len(steps) - 1 else v), 
+        disabled=get_step() == len(steps) - 1, 
+        kind="success"
+    )
+    reset_btn = mo.ui.button(label="🔄 Reiniciar", on_click=lambda _: set_step(0))
 
     slider = mo.ui.slider(0, len(steps) - 1, value=get_step(), on_change=set_step, label="Pasos")
 
