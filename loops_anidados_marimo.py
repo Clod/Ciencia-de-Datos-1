@@ -168,6 +168,9 @@ def _(controls, get_step, mo, steps):
     current = steps[current_idx]
 
     def highlight_code(current_line):
+        """
+        Resalta la línea de código actual.
+        """
         code_lines = [
             "botellas = 3",
             "pasos_llenado = 3",
@@ -200,6 +203,7 @@ def _(controls, get_step, mo, steps):
             levels[st['bottle_idx']] = st['nivel']
 
     def render_bottle(idx, lvl, active):
+        """Renderiza una botella con el nivel especificado."""
         border_color = "#14b8a6" if active else "#475569"
         glow = "box-shadow: 0 0 15px rgba(20, 184, 166, 0.4);" if active else ""
         return f"""
@@ -210,7 +214,7 @@ def _(controls, get_step, mo, steps):
             <span style="margin-top: 8px; font-size: 12px; color: {border_color}; font-weight: bold;">B{idx}</span>
         </div>
         """
-
+    # Renderiza las botellas
     bottles = mo.Html(f"""
     <div style="display: flex; gap: 30px; justify-content: center; padding: 20px; background: #020617; border-radius: 12px; border: 1px solid #1e293b;">
         {"".join([render_bottle(i, levels[i], current['bottle_idx'] == i) for i in range(3)])}
@@ -225,7 +229,7 @@ def _(controls, get_step, mo, steps):
     </div>
     """)
 
-    # Layout
+    # Layout: dos columnas, la izquierda con el código y los controles, la derecha con las botellas y la consola
     ui = mo.hstack([
         mo.vstack([
             mo.md("### 🕹️ Control & Debug"),
@@ -244,6 +248,6 @@ def _(controls, get_step, mo, steps):
     ui
     return
 
-
+# Ejecutar la aplicación
 if __name__ == "__main__":
     app.run()
