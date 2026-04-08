@@ -47,6 +47,8 @@ def _():
                 trace.append({"line": 9, "i": i, "j": j, "nivel": nivel, "msg": f"Botella {i}: {nivel:.1f}%", "bottle_idx": i})
 
         trace.append({"line": 11, "i": None, "j": None, "nivel": 100, "msg": "¡Proceso finalizado!", "bottle_idx": -1})
+        # Paso extra para que se vea el efecto del último print en el debugger
+        trace.append({"line": -1, "i": None, "j": None, "nivel": 100, "msg": "--- Ejecución terminada ---", "bottle_idx": -1})
         return trace
 
     steps = get_trace()
@@ -56,7 +58,7 @@ def _():
 @app.cell
 def _(mo):
     get_step, set_step = mo.state(0, allow_self_loops=True)
-    return (get_step, set_step)
+    return get_step, set_step
 
 
 @app.cell
@@ -88,7 +90,7 @@ def _(get_step, mo, set_step, steps):
     slider = mo.ui.slider(0, len(steps) - 1, value=get_step(), on_change=set_step, label="Pasos")
 
     controls = mo.hstack([prev_btn, next_btn, reset_btn, slider], justify="start")
-    return controls, get_step
+    return (controls,)
 
 
 @app.cell
@@ -148,7 +150,7 @@ def _(controls, get_step, mo, steps):
     # Console
     console_msgs = [steps[s]['msg'] for s in range(current_idx) if steps[s]['line'] in [9, 11]]
     console = mo.Html(f"""
-    <div style="background: #000; color: #10b981; font-family: monospace; padding: 10px; height: 300px; overflow-y: auto; border: 1px solid #1e293b; border-radius: 6px; font-size: 13px;">
+    <div style="background: #000; color: #10b981; font-family: monospace; padding: 10px; height: 250px; overflow-y: auto; border: 1px solid #1e293b; border-radius: 6px; font-size: 13px;">
         {'> ' + '<br>> '.join(console_msgs) if console_msgs else '> Iniciando sistema...'}
     </div>
     """)
