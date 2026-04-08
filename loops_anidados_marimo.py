@@ -204,7 +204,7 @@ def _(controls, get_step, mo, steps):
         # Para ello se utiliza la librería mo.Html y se le pasa como parámetro un string con el código HTML.
         # El string se construye con f-strings y se le pasa como parámetro un string con el código HTML.
 
-        return mo.Html(f"<div style='font-family: \"JetBrains Mono\", monospace; background: #0f172a; color: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #1e293b;'>{''.join(styled_lines)}</div>")
+        return mo.Html(f"<div style='font-family: \"JetBrains Mono\", monospace; background: midnightblue; color: white; padding: 15px; border-radius: 8px; border: 1px solid steelblue;'>{''.join(styled_lines)}</div>")
 
     # Visualization Logic
     # Lógica de Visualización: Calcula los niveles de las botellas hasta el paso actual.
@@ -216,19 +216,19 @@ def _(controls, get_step, mo, steps):
 
     def render_bottle(idx, lvl, active):
         """Renderiza una botella con el nivel especificado."""
-        border_color = "#14b8a6" if active else "#475569"
+        border_color = "teal" if active else "gray"
         glow = "box-shadow: 0 0 15px rgba(20, 184, 166, 0.4);" if active else ""
         return f"""
         <div style="display: flex; flex-direction: column; align-items: center; width: 60px;">
-            <div style="position: relative; height: 160px; width: 50px; border: 3px solid {border_color}; {glow} border-top: none; border-radius: 0 0 8px 8px; background: #1e293b; overflow: hidden;">
-                <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: {lvl}%; background: linear-gradient(to top, #14b8a6, #38bdf8); transition: height 0.3s ease;"></div>
+            <div style="position: relative; height: 160px; width: 50px; border: 3px solid {border_color}; {glow} border-top: none; border-radius: 0 0 8px 8px; background: darkslategrey; overflow: hidden;">
+                <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: {lvl}%; background: linear-gradient(to top, teal, skyblue); transition: height 0.3s ease;"></div>
             </div>
             <span style="margin-top: 8px; font-size: 12px; color: {border_color}; font-weight: bold;">B{idx}</span>
         </div>
         """
     # Renderiza las botellas
     bottles = mo.Html(f"""
-    <div style="display: flex; gap: 30px; justify-content: center; padding: 20px; background: #020617; border-radius: 12px; border: 1px solid #1e293b;">
+    <div style="display: flex; gap: 30px; justify-content: center; padding: 20px; background: black; border-radius: 12px; border: 1px solid slategray;">
         {"".join([render_bottle(i, levels[i], current['bottle_idx'] == i) for i in range(3)])}
     </div>
     """)
@@ -236,7 +236,7 @@ def _(controls, get_step, mo, steps):
     # Console
     console_msgs = [steps[s]['msg'] for s in range(current_idx) if steps[s]['line'] in [9, 11]]
     console = mo.Html(f"""
-    <div style="background: #000; color: #10b981; font-family: monospace; padding: 10px; height: 250px; overflow-y: auto; border: 1px solid #1e293b; border-radius: 6px; font-size: 13px;">
+    <div style="background: black; color: lime; font-family: monospace; padding: 10px; height: 250px; overflow-y: auto; border: 1px solid slategray; border-radius: 6px; font-size: 13px;">
         {'> ' + '<br>> '.join(console_msgs) if console_msgs else '> Iniciando sistema...'}
     </div>
     """)
