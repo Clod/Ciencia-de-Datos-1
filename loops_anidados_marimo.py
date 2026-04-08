@@ -65,14 +65,14 @@ def _():
         """
         Simula la ejecución de los bucles anidados y captura el estado del sistema 
         en cada punto crítico (iteraciones, cálculos y finalización).
-        
+
         Retorna:
             list: Una secuencia de diccionarios, donde cada uno representa un 'paso' 
                   con la línea de código actual, valores de i y j, nivel de llenado y mensaje.
         """
         botellas = 3
         pasos_llenado = 3
-        
+
         # Esta lista almacenará los 'snapshots' de memoria de cada momento del programa.
         # Es lo que permite que el visualizador pueda 'viajar en el tiempo' (atrás y adelante).
         trace = [] # Es una lista
@@ -88,7 +88,7 @@ def _():
         # nivel: valor de la variable nivel en ese momento
         # msg: mensaje que se está mostrando
         # bottle_idx: índice de la botella que se está llenando
-        
+
         # Bucle exterior: cada botella
         for i in range(botellas):
             trace.append({"line": 5, "i": i, "j": None, "nivel": 0, "msg": f"Iniciando Botella {i}", "bottle_idx": i})
@@ -191,8 +191,8 @@ def _(controls, get_step, mo, steps):
         # Cada string contiene el número de línea, el código y el estilo de la línea.
         styled_lines = []
         for idx, line in enumerate(code_lines, 1):
-            # Se define el color de la línea. Color cyan si es la línea actual, transparente si no.
-            color = "#0ea5e9" if idx == current_line else "transparent"
+            # Se define el color de la línea vertical de la izquierda del código. Color cyan si es la línea actual, transparente si no.
+            color = "green" if idx == current_line else "red"
             # Se define el color de fondo de la línea. Color cyan si es la línea actual, transparente si no.
             bg = "rgba(14, 165, 233, 0.15)" if idx == current_line else "transparent"
             # Se define la opacidad de la línea. 1 si es la línea actual, 0.5 si no.
@@ -260,6 +260,6 @@ def _(controls, get_step, mo, steps):
     ui
     return
 
-# Ejecutar la aplicación
+
 if __name__ == "__main__":
     app.run()
