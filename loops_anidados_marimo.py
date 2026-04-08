@@ -69,7 +69,7 @@ def _(mo, steps):
         set_step(0)
 
     prev_btn = mo.ui.button(label="⬅️ Anterior", on_click=decrement, disabled=get_step() == 0)
-    next_btn = mo.ui.button(label="Siguiente ➡️", on_click=increment, disabled=get_step() == len(steps) - 1, kind="primary")
+    next_btn = mo.ui.button(label="Siguiente ➡️", on_click=increment, disabled=get_step() == len(steps) - 1, kind="success")
     reset_btn = mo.ui.button(label="🔄 Reiniciar", on_click=reset)
 
     slider = mo.ui.slider(0, len(steps) - 1, value=get_step(), on_change=set_step, label="Pasos")
