@@ -122,7 +122,7 @@ def _(controls, get_step, mo, steps):
 
     # Visualization Logic
     levels = [0, 0, 0]
-    for s in range(current_idx + 1):
+    for s in range(current_idx):
         st = steps[s]
         if st['bottle_idx'] != -1 and st['line'] >= 8:
             levels[st['bottle_idx']] = st['nivel']
@@ -146,7 +146,7 @@ def _(controls, get_step, mo, steps):
     """)
 
     # Console
-    console_msgs = [steps[s]['msg'] for s in range(current_idx + 1) if steps[s]['line'] in [9, 11]]
+    console_msgs = [steps[s]['msg'] for s in range(current_idx) if steps[s]['line'] in [9, 11]]
     console = mo.Html(f"""
     <div style="background: #000; color: #10b981; font-family: monospace; padding: 10px; height: 300px; overflow-y: auto; border: 1px solid #1e293b; border-radius: 6px; font-size: 13px;">
         {'> ' + '<br>> '.join(console_msgs) if console_msgs else '> Iniciando sistema...'}
