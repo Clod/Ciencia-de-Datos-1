@@ -75,14 +75,24 @@ def _():
         
         # Esta lista almacenará los 'snapshots' de memoria de cada momento del programa.
         # Es lo que permite que el visualizador pueda 'viajar en el tiempo' (atrás y adelante).
-        trace = []
+        trace = [] # Es una lista
 
         # Snapshot inicial
         trace.append({"line": 1, "i": None, "j": None, "nivel": 0, "msg": "Inicializando...", "bottle_idx": -1})
         trace.append({"line": 2, "i": None, "j": None, "nivel": 0, "msg": "Configurando pasos...", "bottle_idx": -1})
-
+        # Notar que cada elemento de la lista es, a su vez, un diccionario
+        # con claves que representan el estado de las variables en ese momento.
+        # line: número de línea del código que se está ejecutando
+        # i: valor de la variable i en ese momento
+        # j: valor de la variable j en ese momento
+        # nivel: valor de la variable nivel en ese momento
+        # msg: mensaje que se está mostrando
+        # bottle_idx: índice de la botella que se está llenando
+        
+        # Bucle exterior: cada botella
         for i in range(botellas):
             trace.append({"line": 5, "i": i, "j": None, "nivel": 0, "msg": f"Iniciando Botella {i}", "bottle_idx": i})
+            # Bucle interior
             for j in range(1, pasos_llenado + 1):
                 trace.append({"line": 7, "i": i, "j": j, "nivel": 0, "msg": f"Preparando llenado {j}...", "bottle_idx": i})
                 nivel = (j / pasos_llenado) * 100
