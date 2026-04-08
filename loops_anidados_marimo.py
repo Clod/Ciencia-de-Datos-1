@@ -171,6 +171,7 @@ def _(controls, get_step, mo, steps):
         """
         Resalta la línea de código actual.
         """
+        # Se define una lista con cada una de las líneas del código.
         code_lines = [
             "botellas = 3",
             "pasos_llenado = 3",
@@ -185,12 +186,23 @@ def _(controls, get_step, mo, steps):
             "print('¡Proceso finalizado!')"
         ]
 
+        # Se define una lista con cada una de las líneas del código.
+        # A diferencia de code_lines, styled_lines es una lista de strings que representan el código HTML.
+        # Cada string contiene el número de línea, el código y el estilo de la línea.
         styled_lines = []
         for idx, line in enumerate(code_lines, 1):
+            # Se define el color de la línea. Color cyan si es la línea actual, transparente si no.
             color = "#0ea5e9" if idx == current_line else "transparent"
+            # Se define el color de fondo de la línea. Color cyan si es la línea actual, transparente si no.
             bg = "rgba(14, 165, 233, 0.15)" if idx == current_line else "transparent"
+            # Se define la opacidad de la línea. 1 si es la línea actual, 0.5 si no.
             opacity = "1" if idx == current_line else "0.5"
+            # Se agrega la línea a la lista de líneas estilizadas.
             styled_lines.append(f"<div style='background: {bg}; border-left: 4px solid {color}; padding: 2px 10px; opacity: {opacity}; white-space: pre;'>{idx}: {line}</div>")
+
+        # Renderiza el código resaltado.
+        # Para ello se utiliza la librería mo.Html y se le pasa como parámetro un string con el código HTML.
+        # El string se construye con f-strings y se le pasa como parámetro un string con el código HTML.
 
         return mo.Html(f"<div style='font-family: \"JetBrains Mono\", monospace; background: #0f172a; color: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #1e293b;'>{''.join(styled_lines)}</div>")
 
