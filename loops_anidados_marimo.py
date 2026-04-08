@@ -62,8 +62,19 @@ def _():
     exactamente qué mostrar en cada momento del tiempo.
     """
     def get_trace():
+        """
+        Simula la ejecución de los bucles anidados y captura el estado del sistema 
+        en cada punto crítico (iteraciones, cálculos y finalización).
+        
+        Retorna:
+            list: Una secuencia de diccionarios, donde cada uno representa un 'paso' 
+                  con la línea de código actual, valores de i y j, nivel de llenado y mensaje.
+        """
         botellas = 3
         pasos_llenado = 3
+        
+        # Esta lista almacenará los 'snapshots' de memoria de cada momento del programa.
+        # Es lo que permite que el visualizador pueda 'viajar en el tiempo' (atrás y adelante).
         trace = []
 
         # Snapshot inicial
