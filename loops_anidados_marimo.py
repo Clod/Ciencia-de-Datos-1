@@ -5,6 +5,28 @@
 # ]
 # ///
 
+"""
+📊 VISUALIZADOR DE BUCLES ANIDADOS (MARIMO)
+=========================================
+
+Propósito:
+----------
+Esta es una herramienta educativa diseñada para ayudar a estudiantes principiantes de 
+Python a visualizar el funcionamiento de los bucles anidados (un bucle dentro de otro).
+
+Simulación:
+-----------
+- Bucle Exterior: Representa cada una de las 3 botellas.
+- Bucle Interior: Representa los pasos de llenado de cada botella individual.
+
+Cómo ejecutar:
+--------------
+1. Asegúrate de tener instalado Python 3.11+ y marimo.
+2. Ejecuta el siguiente comando en tu terminal:
+   uv run marimo edit loops_anidados_marimo.py
+3. Usa los controles (Anterior/Siguiente) para navegar por la ejecución paso a paso.
+"""
+
 import marimo
 
 __generated_with = "0.23.0"
@@ -13,6 +35,10 @@ app = marimo.App(width="full")
 
 @app.cell
 def _():
+    """
+    Importamos la librería marimo. 'mo' es el alias estándar que nos da 
+    acceso a todas las herramientas interactivas y de diseño visual.
+    """
     import marimo as mo
 
     return (mo,)
@@ -20,6 +46,7 @@ def _():
 
 @app.cell
 def _(mo):
+    """Aquí usamos Markdown para mostrar el título y la presentación del ejercicio."""
     mo.md("""
     # 🧪 Visualizador de Bucles Reactivo
     Explora cómo funcionan los bucles anidados paso a paso con la reactividad de **marimo**.
@@ -29,6 +56,11 @@ def _(mo):
 
 @app.cell
 def _():
+    """
+    SIMULACIÓN: Esta celda pre-calcula toda la ejecución del bucle. 
+    Creamos una 'traza' (trace) con cada paso para que el sistema sepa 
+    exactamente qué mostrar en cada momento del tiempo.
+    """
     def get_trace():
         botellas = 3
         pasos_llenado = 3
@@ -57,12 +89,23 @@ def _():
 
 @app.cell
 def _(mo):
+    """
+    ESTADO REACTIVO: mo.state funciona como el cerebro del visualizador.
+    Nos permite guardar en qué paso estamos y actualizar todo el sistema
+    automáticamente cada vez que este número cambia.
+    """
+    # mo.state es la memoria de Marimo: get_step lee el paso actual, set_step lo cambia.
     get_step, set_step = mo.state(0, allow_self_loops=True)
     return get_step, set_step
 
 
 @app.cell
 def _(get_step, mo, set_step, steps):
+    """
+    INTERFAZ DE CONTROL: Creamos los botones y el slider para que el usuario
+    pueda navegar por los bucles (Anterior, Siguiente, Reiniciar).
+    """
+    # Definimos la interfaz de control: botones y slider que actualizan el estado.
 
     def increment(_):
         set_step(lambda v: v + 1 if v < len(steps) - 1 else v)
@@ -95,6 +138,11 @@ def _(get_step, mo, set_step, steps):
 
 @app.cell
 def _(controls, get_step, mo, steps):
+    """
+    VISUALIZACIÓN PRINCIPAL: Esta es la celda que 'cobra vida'. 
+    Toma el paso actual y renderiza el código resaltado, las botellas y la consola.
+    """
+    # Celda principal de visualización: se refresca cada vez que el paso cambia.
     current_idx = get_step()
     current = steps[current_idx]
 
@@ -123,6 +171,7 @@ def _(controls, get_step, mo, steps):
         return mo.Html(f"<div style='font-family: \"JetBrains Mono\", monospace; background: #0f172a; color: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid #1e293b;'>{''.join(styled_lines)}</div>")
 
     # Visualization Logic
+    # Lógica de Visualización: Calcula los niveles de las botellas hasta el paso actual.
     levels = [0, 0, 0]
     for s in range(current_idx):
         st = steps[s]
