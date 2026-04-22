@@ -29,7 +29,7 @@ Cómo ejecutar:
 
 import marimo
 
-__generated_with = "0.23.0"
+__generated_with = "0.23.2"
 app = marimo.App(width="full")
 
 
@@ -61,6 +61,10 @@ def _():
     Creamos una 'traza' (trace) con cada paso para que el sistema sepa 
     exactamente qué mostrar en cada momento del tiempo.
     """
+    # Definimos las variables a nivel de celda para que sean "globales" en el notebook
+    CANT_BOTELLAS = 3 # Variable "constante" (escrita en mayúsculas para indicar que no debe cambiar)
+    pasos_llenado = 4
+
     def get_trace():
         """
         Simula la ejecución de los bucles anidados y captura el estado del sistema 
@@ -70,9 +74,6 @@ def _():
             list: Una secuencia de diccionarios, donde cada uno representa un 'paso' 
                   con la línea de código actual, valores de i y j, nivel de llenado y mensaje.
         """
-        botellas = 3
-        pasos_llenado = 3
-
         # Esta lista almacenará los 'snapshots' de memoria de cada momento del programa.
         # Es lo que permite que el visualizador pueda 'viajar en el tiempo' (atrás y adelante).
         trace = [] # Es una lista
@@ -90,7 +91,7 @@ def _():
         # bottle_idx: índice de la botella que se está llenando
 
         # Bucle exterior: cada botella
-        for i in range(botellas):
+        for i in range(CANT_BOTELLAS):
             trace.append({"line": 5, "i": i, "j": None, "nivel": 0, "msg": f"Iniciando Botella {i}", "bottle_idx": i})
             # Bucle interior
             for j in range(1, pasos_llenado + 1):
@@ -105,7 +106,7 @@ def _():
         return trace
 
     steps = get_trace()
-    return (steps,)
+    return CANT_BOTELLAS, pasos_llenado, steps
 
 
 @app.cell
@@ -158,7 +159,7 @@ def _(get_step, mo, set_step, steps):
 
 
 @app.cell
-def _(controls, get_step, mo, steps):
+def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
     """
     VISUALIZACIÓN PRINCIPAL: Esta es la celda que 'cobra vida'. 
     Toma el paso actual y renderiza el código resaltado, las botellas y la consola.
@@ -173,8 +174,8 @@ def _(controls, get_step, mo, steps):
         """
         # Se define una lista con cada una de las líneas del código.
         code_lines = [
-            "botellas = 3",
-            "pasos_llenado = 3",
+            f"botellas = {CANT_BOTELLAS}",
+            f"pasos_llenado = {pasos_llenado}",
             "",
             "# Bucle exterior: cada botella",
             "for i in range(botellas):",
