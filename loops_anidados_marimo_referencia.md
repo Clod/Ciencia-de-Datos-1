@@ -8,8 +8,20 @@ Conceptos que vamos a ver:
 
 Docstrings: """Texto explicativo de lo que hace el código. Se puede poner en varias líneas"""
 
+Variables is "constantes": No es una regla, pero por convención se escriben en mayúsculas. 
 
+Diccionarios: "cajitas" que guardan información en pares clave-valor.
 
+Funciones: Bloques de código que realizan una tarea específica.
+
+Lambda: Funciones anónimas. Se escriben en una sola línea.
+
+# Una forma de definir una función (no se usa en python)
+def f(param1, param2):
+    return param1+param2
+
+# La forma que se usa en python
+f = lambda param1, param2: param1+param2
 
 * Bucles anidados
     * Bucle exterior

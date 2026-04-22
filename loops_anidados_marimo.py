@@ -63,7 +63,7 @@ def _():
     """
     # Definimos las variables a nivel de celda para que sean "globales" en el notebook
     CANT_BOTELLAS = 3 # Variable "constante" (escrita en mayúsculas para indicar que no debe cambiar)
-    pasos_llenado = 4
+    pasos_llenado = 2
 
     def get_trace():
         """
@@ -92,12 +92,16 @@ def _():
 
         # Bucle exterior: cada botella
         for i in range(CANT_BOTELLAS):
+            # Me guardo que empiezo a trabajar con la botella i
             trace.append({"line": 5, "i": i, "j": None, "nivel": 0, "msg": f"Iniciando Botella {i}", "bottle_idx": i})
-            # Bucle interior
+            # Bucle interior: cada paso de llenado de cada botella
             for j in range(1, pasos_llenado + 1):
+                # Me guardo que empiezo a trabajar con el paso j de la botella i
                 trace.append({"line": 7, "i": i, "j": j, "nivel": 0, "msg": f"Preparando llenado {j}...", "bottle_idx": i})
                 nivel = (j / pasos_llenado) * 100
+                # Me guardo que calculé el nivel de la botella i
                 trace.append({"line": 8, "i": i, "j": j, "nivel": nivel, "msg": f"Calculando nivel: {nivel:.1f}%", "bottle_idx": i})
+                # Me guardo que muestro el nivel de la botella i
                 trace.append({"line": 9, "i": i, "j": j, "nivel": nivel, "msg": f"Botella {i}: {nivel:.1f}%", "bottle_idx": i})
 
         trace.append({"line": 11, "i": None, "j": None, "nivel": 100, "msg": "¡Proceso finalizado!", "bottle_idx": -1})
@@ -105,7 +109,10 @@ def _():
         trace.append({"line": -1, "i": None, "j": None, "nivel": 100, "msg": "--- Ejecución terminada ---", "bottle_idx": -1})
         return trace
 
+    # Aca se ejecuta la funcion get_trace() y se guarda el resultado en la variable steps
+    # Recordar que steps es una lista de diccionarios y que cada uno tiene las claves line, i, j, nivel, msg y bottle_idx
     steps = get_trace()
+
     return CANT_BOTELLAS, pasos_llenado, steps
 
 
@@ -121,7 +128,7 @@ def _(mo):
     return get_step, set_step
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(get_step, mo, set_step, steps):
     """
     INTERFAZ DE CONTROL: Creamos los botones y el slider para que el usuario
@@ -152,13 +159,18 @@ def _(get_step, mo, set_step, steps):
     )
     reset_btn = mo.ui.button(label="🔄 Reiniciar", on_click=lambda _: set_step(0))
 
+    # Control deslizante para avanzar y retroceder en el bucle.
+    # El rango es desde 0 hasta la cantidad total de pasos menos 1.
+    # El valor inicial es el paso actual (get_step()).
+    # El evento on_change llama a set_step con el nuevo valor.
     slider = mo.ui.slider(0, len(steps) - 1, value=get_step(), on_change=set_step, label="Pasos")
 
+    # Agrupamos todos los controles en una fila.
     controls = mo.hstack([prev_btn, next_btn, reset_btn, slider], justify="start")
     return (controls,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
     """
     VISUALIZACIÓN PRINCIPAL: Esta es la celda que 'cobra vida'. 
@@ -258,7 +270,7 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
         ], align="stretch")
     ], justify="space-around", gap=2)
 
-    ui
+    ui # Esta es la instruccion para que Marimo muestre el resultado de la celda, es equivalente a un print
     return
 
 
