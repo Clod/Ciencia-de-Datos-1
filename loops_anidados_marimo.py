@@ -144,18 +144,28 @@ def _(get_step, mo, set_step, steps):
     def reset(_):
         set_step(0)
 
+    # Botón para retroceder al paso anterior.
+    # Se define una funcion lambda que llama a set_step con el valor anterior (v - 1).
+    # Se deshabilita el botón cuando el paso actual es 0.
     prev_btn = mo.ui.button(
         label="⬅️ Anterior", 
         on_click=lambda _: set_step(lambda v: v - 1 if v > 0 else v), 
         disabled=get_step() == 0,
         kind="neutral"
     )
+
+    # Botón para avanzar al paso siguiente.
+    # Se define una funcion lambda que llama a set_step con el valor siguiente (v + 1).
+    # Se deshabilita el botón cuando el paso actual es el último.
     next_btn = mo.ui.button(
         label="Siguiente ➡️", 
         on_click=lambda _: set_step(lambda v: v + 1 if v < len(steps) - 1 else v), 
         disabled=get_step() == len(steps) - 1, 
         kind="success"
     )
+
+    # Botón para reiniciar el visualizador.
+    # Se define una funcion lambda que llama a set_step con el valor 0.
     reset_btn = mo.ui.button(label="🔄 Reiniciar", on_click=lambda _: set_step(0))
 
     # Control deslizante para avanzar y retroceder en el bucle.
@@ -201,6 +211,7 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
 
         # Se define una lista con cada una de las líneas del código.
         # A diferencia de code_lines, styled_lines es una lista de strings que representan el código HTML.
+        # o sea, una representacion del codigo con estilos aplicados para ser mostrada en el navegador.
         # Cada string contiene el número de línea, el código y el estilo de la línea.
         styled_lines = []
         for idx, line in enumerate(code_lines, 1):
@@ -268,7 +279,7 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
         mo.vstack([
             mo.md("### 📊 Estado de Botellas"),
             bottles,
-            mo.md("### 📟 Salida Console"),
+            mo.md("### 📟 Salida Consola"),
             console
         ], align="stretch")
     ], justify="space-around", gap=2)
@@ -276,6 +287,8 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
     ui # Esta es la instruccion para que Marimo muestre el resultado de la celda, es equivalente a un print
     return
 
-
+# Esta es la instruccion para que Marimo inicie la aplicacion
+# Si no se incluye esta linea, no se ejecutara el codigo
+# Y debemos asegurarnos que este debajo de la definicion de app
 if __name__ == "__main__":
     app.run()
