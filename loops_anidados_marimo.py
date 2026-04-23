@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.11"
 # dependencies = [
-#     "marimo",
+#     "marimo>=0.23.2",
 # ]
 # ///
 
@@ -112,7 +112,6 @@ def _():
     # Aca se ejecuta la funcion get_trace() y se guarda el resultado en la variable steps
     # Recordar que steps es una lista de diccionarios y que cada uno tiene las claves line, i, j, nivel, msg y bottle_idx
     steps = get_trace()
-
     return CANT_BOTELLAS, pasos_llenado, steps
 
 
@@ -178,6 +177,7 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
     """
     # Celda principal de visualización: se refresca cada vez que el paso cambia.
     current_idx = get_step()
+    # Accedemos al elemento i-ésimo del vector 
     current = steps[current_idx]
 
     def highlight_code(current_line):
@@ -216,7 +216,6 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
         # Renderiza el código resaltado.
         # Para ello se utiliza la librería mo.Html y se le pasa como parámetro un string con el código HTML.
         # El string se construye con f-strings y se le pasa como parámetro un string con el código HTML.
-
         return mo.Html(f"<div style='font-family: \"JetBrains Mono\", monospace; background: midnightblue; color: white; padding: 15px; border-radius: 8px; border: 1px solid steelblue;'>{''.join(styled_lines)}</div>")
 
     # Visualization Logic
@@ -229,8 +228,12 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
 
     def render_bottle(idx, lvl, active):
         """Renderiza una botella con el nivel especificado."""
+        # Si la botella está activa, el borde es de color teal y tiene un glow
+        # Si la botella no está activa, el borde es de color gris y no tiene un glow
         border_color = "teal" if active else "gray"
+        # El glow es una sombra que se aplica a la botella
         glow = "box-shadow: 0 0 15px rgba(20, 184, 166, 0.4);" if active else ""
+        # Renderiza una bottela con un contenedor de borde teal y fondo gris oscuro
         return f"""
         <div style="display: flex; flex-direction: column; align-items: center; width: 60px;">
             <div style="position: relative; height: 160px; width: 50px; border: 3px solid {border_color}; {glow} border-top: none; border-radius: 0 0 8px 8px; background: darkslategrey; overflow: hidden;">
@@ -246,7 +249,7 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
     </div>
     """)
 
-    # Console
+    # Renderiza la consola
     console_msgs = [steps[s]['msg'] for s in range(current_idx) if steps[s]['line'] in [9, 11]]
     console = mo.Html(f"""
     <div style="background: black; color: lime; font-family: monospace; padding: 10px; height: 250px; overflow-y: auto; border: 1px solid slategray; border-radius: 6px; font-size: 13px;">
