@@ -131,6 +131,11 @@ def _(mo):
     automáticamente cada vez que este número cambia.
     """
     # mo.state es la memoria de Marimo: get_step lee el paso actual, set_step lo cambia.
+    # allow_self_loops=True permite que la función set_step reciba como argumento el valor actual de la variable.
+    # En pocas palabras el estado es la memoria del sistema de marimo que nos permite saber en qué paso estamos.
+    # get_step es una función que nos permite obtener el valor actual de la variable.
+    # set_step es una función que nos permite establecer el valor actual de la variable.
+    # 0 es el valor inicial de la variable.
     get_step, set_step = mo.state(0, allow_self_loops=True)
     return get_step, set_step
 
