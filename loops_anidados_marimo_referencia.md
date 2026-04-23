@@ -27,7 +27,7 @@ Conceptos que vamos a ver:
 
 **Funciones:** Bloques de código que realizan una tarea específica.
 
-**Lambda:** Funciones anónimas. Se escriben en una sola línea.
+**Lambda:** Funciones anónimas. Se escriben en una sola línea. No las vimos todavía en clases pero lo importante es que entiendan que se usa de modo análogo a lo que vimos en clases.
 
 **Una forma de definir una función (no se usa en python)**
 
@@ -37,6 +37,10 @@ def f(param1, param2):
 **La forma que se usa en python**
 
 f = lambda param1, param2: param1+param2
+
+
+**Decorators: ** por ejemplo la línea @app.cell es un decorator. Pensemos que es una forma de agregarle funcionalidad a una función o método sin mostrar explícitamente en el código
+
 
 - **Bucles anidados**
   - Bucle exterior

@@ -39,8 +39,11 @@ def _():
     Importamos la librería marimo. 'mo' es el alias estándar que nos da 
     acceso a todas las herramientas interactivas y de diseño visual.
     """
+    # "Traigo" toda la funcionalidad de la librería mo, que está dentro de marimo
+    # "mo" va a ser nuestra caja negra de herramientas para generar código marimo 
     import marimo as mo
 
+    # Para el que necesite usar marimo, lo traje y lo dejo disponible, para que lo use en sus celdas
     return (mo,)
 
 
@@ -87,8 +90,23 @@ def _():
         trace = [] # Es una lista
 
         # Snapshot inicial
-        trace.append({"line": 1, "i": None, "j": None, "nivel": 0, "msg": "Inicializando...", "bottle_idx": -1})
-        trace.append({"line": 2, "i": None, "j": None, "nivel": 0, "msg": "Configurando pasos...", "bottle_idx": -1})
+        trace.append({
+            "line": 1, 
+            "i": None, 
+            "j": None, 
+            "nivel": 0, 
+            "msg": "Inicializando...", 
+            "bottle_idx": -1
+        })
+
+        trace.append({
+            "line": 2, 
+            "i": None, 
+            "j": None, 
+            "nivel": 0, 
+            "msg": "Configurando pasos...", 
+            "bottle_idx": -1
+        })
         # Notar que cada elemento de la lista es, a su vez, un diccionario
         # con claves que representan el estado de las variables en ese momento.
         # line: número de línea del código que se está ejecutando
@@ -229,6 +247,8 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
         # o sea, una representacion del codigo con estilos aplicados para ser mostrada en el navegador.
         # Cada string contiene el número de línea, el código y el estilo de la línea.
         styled_lines = []
+        # enumerate devuelve el índice (idx) y el elemento (line) de la lista code_lines.
+        # en este caso el indice es el numero de linea y el elemento es el codigo de la linea
         for idx, line in enumerate(code_lines, 1):
             # Se define el color de la línea vertical de la izquierda del código. Color cyan si es la línea actual, transparente si no.
             color = "green" if idx == current_line else "red"
@@ -302,8 +322,6 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
     ui # Esta es la instruccion para que Marimo muestre el resultado de la celda, es equivalente a un print
     return
 
-# Esta es la instruccion para que Marimo inicie la aplicacion
-# Si no se incluye esta linea, no se ejecutara el codigo
-# Y debemos asegurarnos que este debajo de la definicion de app
+
 if __name__ == "__main__":
     app.run()
