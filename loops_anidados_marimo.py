@@ -73,8 +73,16 @@ def _():
         Retorna:
             list: Una secuencia de diccionarios, donde cada uno representa un 'paso' 
                   con la línea de código actual, valores de i y j, nivel de llenado y mensaje.
+
+        En este caso, las claves del diccionario son:
+            line: número de línea del código que se está ejecutando
+            i: valor de la variable i en ese momento (índice del bucle exterior que recorre la cantidad de botellas)
+            j: valor de la variable j en ese momento (índice del bucle interior que recorre los pasos de llenado)
+            nivel: valor de la variable nivel en ese momento (porcentaje de llenado de la botella)
+            msg: mensaje que se está mostrando en la consola
+            bottle_idx: índice de la botella que se está llenando
         """
-        # Esta lista almacenará los 'snapshots' de memoria de cada momento del programa.
+        # Esta lista almacenará los 'snapshots' de memoria de cada momento del programa.    
         # Es lo que permite que el visualizador pueda 'viajar en el tiempo' (atrás y adelante).
         trace = [] # Es una lista
 
@@ -195,6 +203,9 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
         Resalta la línea de código actual.
         """
         # Se define una lista con cada una de las líneas del código.
+        # Usamos una lista porque es una coleccion ordenada de elementos.
+        # Y cada elemento es una string que representa una línea del código.
+        # No usamos diccionario para code_lines porque no tenemos pares clave-valor.
         code_lines = [
             f"botellas = {CANT_BOTELLAS}",
             f"pasos_llenado = {pasos_llenado}",
