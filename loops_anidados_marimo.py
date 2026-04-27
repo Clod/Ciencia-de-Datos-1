@@ -21,10 +21,39 @@ Simulación:
 
 Cómo ejecutar:
 --------------
-1. Asegúrate de tener instalado Python 3.11+ y marimo.
-2. Ejecuta el siguiente comando en tu terminal:
+
+Opción A — con uv (recomendado, instala dependencias automáticamente):
    uv run marimo edit loops_anidados_marimo.py
-3. Usa los controles (Anterior/Siguiente) para navegar por la ejecución paso a paso.
+
+Opción B — con python y pip (pasos manuales):
+   1. Asegúrate de tener Python 3.11 o superior instalado.
+      Verificá tu versión con:
+         python --version
+      Si obtenés "Python 3.11.x" o mayor, estás listo.
+
+   2. (Opcional pero recomendado) Creá un entorno virtual para no
+      instalar paquetes de forma global en tu sistema:
+         python -m venv .venv
+
+      Activá el entorno virtual:
+         • En macOS / Linux:   source .venv/bin/activate
+         • En Windows:         .venv\Scripts\activate
+
+      Para salir del entorno virtual cuando termines:
+         deactivate
+
+   3. Instalá marimo con pip:
+         pip install "marimo>=0.23.2"
+
+   4. Ejecutá el notebook en modo edición:
+         marimo edit loops_anidados_marimo.py
+
+      O en modo solo lectura (sin poder editar el código):
+         marimo run loops_anidados_marimo.py
+
+   5. Se abrirá una pestaña en tu navegador con la aplicación.
+      Usá los controles (Anterior / Siguiente) para navegar
+      por la ejecución paso a paso.
 """
 
 import marimo
@@ -66,7 +95,7 @@ def _():
     """
     # Definimos las variables a nivel de celda para que sean "globales" en el notebook
     CANT_BOTELLAS = 3 # Variable "constante" (escrita en mayúsculas para indicar que no debe cambiar)
-    pasos_llenado = 2
+    pasos_llenado = 4
 
     def get_trace():
         """
@@ -276,13 +305,13 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
         """Renderiza una botella con el nivel especificado."""
         # Si la botella está activa, el borde es de color teal y tiene un glow
         # Si la botella no está activa, el borde es de color gris y no tiene un glow
-        border_color = "teal" if active else "gray"
+        border_color = "yellow" if active else "red"
         # El glow es una sombra que se aplica a la botella
         glow = "box-shadow: 0 0 15px rgba(20, 184, 166, 0.4);" if active else ""
         # Renderiza una bottela con un contenedor de borde teal y fondo gris oscuro
         return f"""
         <div style="display: flex; flex-direction: column; align-items: center; width: 60px;">
-            <div style="position: relative; height: 160px; width: 50px; border: 3px solid {border_color}; {glow} border-top: none; border-radius: 0 0 8px 8px; background: darkslategrey; overflow: hidden;">
+            <div style="position: relative; height: 160px; width: 50px; border: 3px solid {border_color}; {glow} border-top: none; border-radius: 0 0 8px 8px; background: red; overflow: hidden;">
                 <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: {lvl}%; background: linear-gradient(to top, teal, skyblue); transition: height 0.3s ease;"></div>
             </div>
             <span style="margin-top: 8px; font-size: 12px; color: {border_color}; font-weight: bold;">B{idx}</span>
@@ -314,12 +343,20 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
         mo.vstack([
             mo.md("### 📊 Estado de Botellas"),
             bottles,
-            mo.md("### 📟 Salida Consola"),
+            mo.md("### 📟 Salida Consolar"),
             console
         ], align="stretch")
     ], justify="space-around", gap=2)
 
     ui # Esta es la instruccion para que Marimo muestre el resultado de la celda, es equivalente a un print
+    return
+
+
+@app.cell(hide_code=True)
+def _(mo):
+    mo.md(r"""
+ 
+    """)
     return
 
 
