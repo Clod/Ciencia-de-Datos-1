@@ -294,7 +294,7 @@ def _(get_step, mo, set_step, steps):
     return (controls,)
 
 
-@app.cell
+@app.cell(hide_code=True)
 def _():
     """
     🎨 PLANTILLAS HTML (la "caja negra" de la interfaz)
@@ -359,13 +359,29 @@ def _():
         {lineas}
     </div>
     """
-
-    return (PLANTILLA_LINEA_CODIGO, PLANTILLA_CAJA_CODIGO, PLANTILLA_BOTELLA,
-            PLANTILLA_FILA_BOTELLAS, PLANTILLA_CONSOLA)
+    return (
+        PLANTILLA_BOTELLA,
+        PLANTILLA_CAJA_CODIGO,
+        PLANTILLA_CONSOLA,
+        PLANTILLA_FILA_BOTELLAS,
+        PLANTILLA_LINEA_CODIGO,
+    )
 
 
 @app.cell
-def _(CANT_BOTELLAS, PLANTILLA_BOTELLA, PLANTILLA_CAJA_CODIGO, PLANTILLA_CONSOLA, PLANTILLA_FILA_BOTELLAS, PLANTILLA_LINEA_CODIGO, controls, get_step, mo, pasos_llenado, steps):
+def _(
+    CANT_BOTELLAS,
+    PLANTILLA_BOTELLA,
+    PLANTILLA_CAJA_CODIGO,
+    PLANTILLA_CONSOLA,
+    PLANTILLA_FILA_BOTELLAS,
+    PLANTILLA_LINEA_CODIGO,
+    controls,
+    get_step,
+    mo,
+    pasos_llenado,
+    steps,
+):
     """
     VISUALIZACIÓN PRINCIPAL: Esta es la celda que 'cobra vida'. 
     Toma el paso actual y renderiza el código resaltado, las botellas y la consola.
