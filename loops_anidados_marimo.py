@@ -1,7 +1,7 @@
 # /// script
 # requires-python = ">=3.11"
 # dependencies = [
-#     "marimo>=0.23.2",
+#     "marimo>=0.24.2",
 # ]
 # ///
 
@@ -43,7 +43,7 @@ Opción B — con python y pip (pasos manuales):
          deactivate
 
    3. Instalá marimo con pip:
-         pip install "marimo>=0.23.2"
+         pip install "marimo>=0.24.2"
 
    4. Ejecutá el notebook en modo edición:
          marimo edit loops_anidados_marimo.py
@@ -58,7 +58,7 @@ Opción B — con python y pip (pasos manuales):
 
 import marimo
 
-__generated_with = "0.23.2"
+__generated_with = "0.24.2"
 app = marimo.App(width="full")
 
 
@@ -99,20 +99,38 @@ def _():
 
     def get_trace():
         """
-        Simula la ejecución de los bucles anidados y captura el estado del sistema 
+        Simula la ejecución de los bucles anidados y captura el estado del sistema
         en cada punto crítico (iteraciones, cálculos y finalización).
 
-        Retorna:
-            list: Una secuencia de diccionarios, donde cada uno representa un 'paso' 
-                  con la línea de código actual, valores de i y j, nivel de llenado y mensaje.
+        ¿Qué es una "traza"?
+        --------------------
+        Una traza es un registro (una lista) con TODOS los pasos que dio el
+        programa, como si le hubiéramos puesto una cámara al código.
+        Cada paso guarda una "foto" de cómo estaban las variables en ese
+        momento exacto. Después, el visualizador solo tiene que reproducir
+        esas fotos en orden (como un video) para mostrar la ejecución paso
+        a paso, tanto hacia delante como hacia atrás.
 
-        En este caso, las claves del diccionario son:
-            line: número de línea del código que se está ejecutando
-            i: valor de la variable i en ese momento (índice del bucle exterior que recorre la cantidad de botellas)
-            j: valor de la variable j en ese momento (índice del bucle interior que recorre los pasos de llenado)
-            nivel: valor de la variable nivel en ese momento (porcentaje de llenado de la botella)
-            msg: mensaje que se está mostrando en la consola
-            bottle_idx: índice de la botella que se está llenando
+        Formato de cada paso (un diccionario):
+            {
+                "line": 8,          # línea del código didáctico que se está ejecutando
+                "i": 1,             # botella actual (variable del bucle exterior)
+                "j": 2,             # paso de llenado actual (variable del bucle interior)
+                "nivel": 50.0,      # porcentaje de llenado de la botella (0 a 100)
+                "msg": "Calculando nivel: 50.0%",  # mensaje que se muestra en la consola
+                "bottle_idx": 1     # índice de la botella activa (-1 = ninguna todavía)
+            }
+
+        ¿Por qué -1 en bottle_idx?
+        --------------------------
+        Los pasos iniciales y finales no pertenecen a ninguna botella, así que
+        usamos -1 como "valor centinela" para decirle al programa que en ese
+        paso no hay ninguna botella activa.
+
+        Retorna:
+            list: Una secuencia de diccionarios (los "pasos"). Esta lista es lo
+                  que permite que el visualizador pueda "viajar en el tiempo"
+                  (atrás y adelante) sin volver a ejecutar el bucle real.
         """
         # Esta lista almacenará los 'snapshots' de memoria de cada momento del programa.    
         # Es lo que permite que el visualizador pueda 'viajar en el tiempo' (atrás y adelante).
@@ -186,7 +204,7 @@ def _(mo):
     return get_step, set_step
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(get_step, mo, set_step, steps):
     """
     INTERFAZ DE CONTROL: Creamos los botones y el slider para que el usuario
@@ -195,37 +213,75 @@ def _(get_step, mo, set_step, steps):
     # Definimos la interfaz de control: botones y slider que actualizan el estado.
 
     def increment(_):
+        """
+        Avanza la simulación al siguiente paso (botón "Siguiente ➡️").
+
+        Esta función es el "controlador" del botón Siguiente: marimo la
+        llama automáticamente cuando el usuario hace clic, pasándole el
+        evento en `_`. Usamos el guion bajo como nombre del parámetro como
+        convención para decir "recibo este valor pero no me interesa usarlo".
+
+        Lo que hace por dentro:
+            - Le pide al estado (set_step) que calcule el nuevo paso.
+            - La lambda `lambda v: v + 1 if v < len(steps) - 1 else v`
+              significa:
+                * Si todavía no estamos en el último paso
+                  (v < len(steps) - 1), avanzamos uno: v + 1.
+                * Si ya estamos en el último, nos quedamos en el mismo (v),
+                  para que el índice nunca se salga de la lista `steps`.
+        """
         set_step(lambda v: v + 1 if v < len(steps) - 1 else v)
 
     def decrement(_):
+        """
+        Retrocede la simulación al paso anterior (botón "Anterior ⬅️").
+
+        Es el "controlador" del botón Anterior y funciona como un espejo
+        de `increment`: en lugar de sumar, resta.
+
+        Lo que hace por dentro:
+            - Le pide al estado (set_step) que calcule el nuevo paso.
+            - La lambda `lambda v: v - 1 if v > 0 else v` significa:
+                * Si todavía no estamos en el primer paso (v > 0),
+                  retrocedemos uno: v - 1.
+                * Si ya estamos en el paso 0 (el inicial), nos quedamos,
+                  para no ir a un índice negativo (que no existe).
+        """
         set_step(lambda v: v - 1 if v > 0 else v)
 
     def reset(_):
+        """
+        Reinicia la simulación volviendo al paso 0 (botón "Reiniciar 🔄").
+
+        A diferencia de `increment` y `decrement`, no necesita calcular
+        nada: le ordena al estado (set_step) que vuelva al valor inicial 0,
+        que es el "Snapshot inicial" de la traza (el primero de la lista).
+        """
         set_step(0)
 
     # Botón para retroceder al paso anterior.
-    # Se define una funcion lambda que llama a set_step con el valor anterior (v - 1).
+    # Usa la funcion decrement(), definida mas arriba, que recibe el clic y decide el nuevo paso.
     # Se deshabilita el botón cuando el paso actual es 0.
     prev_btn = mo.ui.button(
         label="⬅️ Anterior", 
-        on_click=lambda _: set_step(lambda v: v - 1 if v > 0 else v), 
+        on_click=decrement, 
         disabled=get_step() == 0,
         kind="neutral"
     )
 
     # Botón para avanzar al paso siguiente.
-    # Se define una funcion lambda que llama a set_step con el valor siguiente (v + 1).
+    # Usa la funcion increment(), definida mas arriba, que recibe el clic y decide el nuevo paso.
     # Se deshabilita el botón cuando el paso actual es el último.
     next_btn = mo.ui.button(
         label="Siguiente ➡️", 
-        on_click=lambda _: set_step(lambda v: v + 1 if v < len(steps) - 1 else v), 
+        on_click=increment, 
         disabled=get_step() == len(steps) - 1, 
         kind="success"
     )
 
     # Botón para reiniciar el visualizador.
-    # Se define una funcion lambda que llama a set_step con el valor 0.
-    reset_btn = mo.ui.button(label="🔄 Reiniciar", on_click=lambda _: set_step(0))
+    # Usa la funcion reset(), definida mas arriba, que vuelve al paso 0 sin calcular nada.
+    reset_btn = mo.ui.button(label="🔄 Reiniciar", on_click=reset)
 
     # Control deslizante para avanzar y retroceder en el bucle.
     # El rango es desde 0 hasta la cantidad total de pasos menos 1.
@@ -238,7 +294,7 @@ def _(get_step, mo, set_step, steps):
     return (controls,)
 
 
-@app.cell(hide_code=True)
+@app.cell
 def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
     """
     VISUALIZACIÓN PRINCIPAL: Esta es la celda que 'cobra vida'. 
@@ -251,7 +307,37 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
 
     def highlight_code(current_line):
         """
-        Resalta la línea de código actual.
+        Dibuja el "visor de código" (el recuadro oscuro) y resalta la línea
+        que se está ejecutando en el paso actual de la simulación.
+
+        Parámetros:
+            current_line (int): Número de línea que debe quedar resaltada.
+                                Por convención, la traza usa -1 para indicar
+                                "fin de la ejecución": en ese caso ninguna
+                                línea queda resaltada.
+
+        ¿Cómo funciona por dentro?
+        -------------------------
+        1. Crea `code_lines`: una lista con el código "didáctico" que vemos
+           en la pantalla (NO es el código real de este archivo, sino una
+           versión simplificada preparada para la clase).
+        2. Recorre esa lista con `enumerate(code_lines, 1)`: en cada vuelta
+           obtiene el número de línea (idx) y el texto de la línea (line).
+           El "1" indica que la cuenta empieza en 1 (y no en 0, como haría
+           la función por defecto).
+        3. Decide, línea por línea, si es la línea actual y elige el estilo:
+           verde + fondo celeste + opacidad total si lo es; rojo +
+           transparente + opacidad media si no lo es.
+        4. Envuelve cada línea en una mini-capa HTML (<div>) y une todas con
+           "".join(styled_lines), que "pega" los elementos de la lista sin
+           separadores, formando un único bloque de HTML.
+        5. Por último, envuelve el bloque en mo.Html(...) para que marimo lo
+           muestre como HTML real en el navegador.
+
+        Retorna:
+            mo.Html: El bloque HTML listo para renderizar en la celda.
+                     Como es un objeto de marimo, la celda lo muestra
+                     automáticamente como parte del output.
         """
         # Se define una lista con cada una de las líneas del código.
         # Usamos una lista porque es una coleccion ordenada de elementos.
@@ -302,7 +388,36 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
             levels[st['bottle_idx']] = st['nivel']
 
     def render_bottle(idx, lvl, active):
-        """Renderiza una botella con el nivel especificado."""
+        """
+        Dibuja UNA botella con su nivel de llenado actual y la devuelve como
+        un bloque de HTML (todavía como string, sin envolver en mo.Html).
+
+        Esta función se llama una vez por botella. El contenedor que las
+        agrupa en fila se arma en la celda principal, uniendo el resultado
+        de cada llamada con "".join(...).
+
+        Parámetros:
+            idx (int): Índice (posición) de la botella: 0, 1 o 2.
+                       Se usa para la etiqueta "B0", "B1", "B2".
+            lvl (float): Nivel de llenado en porcentaje (0 = vacía, 100 = llena).
+                         Se convierte en la altura del "líquido" dentro de la botella.
+            active (bool): True si esta botella es la que se está llenando en el
+                           paso actual. Si es True, el borde se pinta de verde
+                           y se agrega un brillo (glow); si es False, el borde
+                           queda rojo y sin brillo.
+
+        ¿Cómo logra el efecto de llenado?
+        ---------------------------------
+        El "líquido" es una capa (div) posicionada en el fondo de la botella
+        con altura height: {lvl}% y una transición CSS de 0.3 segundos, así
+        el cambio de nivel se suaviza en lugar de aparecer de golpe.
+
+        Retorna:
+            str: El bloque de HTML de UNA botella, listo para ser unido con
+                 los bloques de las demás. Se construye con una f-string,
+                 igual que los mensajes de la consola: cada {variable} se
+                 reemplaza por su valor al momento de ejecutarse la función.
+        """
         # Si la botella está activa, el borde es de color teal y tiene un glow
         # Si la botella no está activa, el borde es de color gris y no tiene un glow
         border_color = "yellow" if active else "red"
@@ -317,22 +432,47 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
             <span style="margin-top: 8px; font-size: 12px; color: {border_color}; font-weight: bold;">B{idx}</span>
         </div>
         """
-    # Renderiza las botellas
+    # Renderiza las botellas en una fila.
+    # La expresión de adentro es una COMPRENSIÓN DE LISTA (list comprehension):
+    #   [render_bottle(i, levels[i], current['bottle_idx'] == i) for i in range(CANT_BOTELLAS)]
+    # Recorre i = 0, 1, 2 y, por cada botella, llama a render_bottle(...) pasándole:
+    #   - i: la posición de la botella (0, 1 o 2).
+    #   - levels[i]: su nivel de llenado actual (calculado en el bucle de arriba).
+    #   - current['bottle_idx'] == i: True si esta botella es la activa en el paso actual.
+    # El resultado es una lista de strings HTML que "pegamos" con "".join(...)
+    # para formar una sola fila adentro del contenedor flex.
+    # NOTA: usamos la constante CANT_BOTELLAS (no un 3 fijo) para que, si algún
+    # día la cambiamos, las botellas se ajusten solas.
     bottles = mo.Html(f"""
     <div style="display: flex; gap: 30px; justify-content: center; padding: 20px; background: black; border-radius: 12px; border: 1px solid slategray;">
-        {"".join([render_bottle(i, levels[i], current['bottle_idx'] == i) for i in range(3)])}
+        {"".join([render_bottle(i, levels[i], current['bottle_idx'] == i) for i in range(CANT_BOTELLAS)])}
     </div>
     """)
 
-    # Renderiza la consola
+    # Renderiza la consola (la "pantalla" del programa simulado).
+    # console_msgs es una comprensión de lista que recorre SOLO los pasos ya
+    # ejecutados (range(current_idx)) y se queda con los mensajes de las líneas
+    # que "imprimen en pantalla" (line 9: el print de cada nivel; line 11: el
+    # print final). El resultado es una lista con los mensajes, en orden.
     console_msgs = [steps[s]['msg'] for s in range(current_idx) if steps[s]['line'] in [9, 11]]
+    # "' > ' + '<br>> '.join(console_msgs)" une todos los mensajes con un salto
+    # de línea (<br>) y les antepone "> " para que parezcan una terminal real.
+    # Si todavía no hay mensajes, mostramos "> Iniciando sistema...".
     console = mo.Html(f"""
     <div style="background: black; color: lime; font-family: monospace; padding: 10px; height: 250px; overflow-y: auto; border: 1px solid slategray; border-radius: 6px; font-size: 13px;">
         {'> ' + '<br>> '.join(console_msgs) if console_msgs else '> Iniciando sistema...'}
     </div>
     """)
 
-    # Layout: dos columnas, la izquierda con el código y los controles, la derecha con las botellas y la consola
+    # Layout final: armamos la página completa combinando los bloques de arriba.
+    #   mo.hstack(...) -> apila elementos en FILA    (horizontal)
+    #   mo.vstack(...) -> apila elementos en COLUMNA (vertical)
+    # Columna izquierda: el panel de control y debug (controles, snapshot y
+    # el visor de código resaltado).
+    # Columna derecha: el estado de las botellas y la consola.
+    # Cada vez que el usuario cambia el paso, esta celda se vuelve a ejecutar
+    # sola porque usa get_step() al principio; marimo detecta que el estado
+    # cambió y re-renderiza todo automáticamente (reactividad).
     ui = mo.hstack([
         mo.vstack([
             mo.md("### 🕹️ Control & Debug"),
