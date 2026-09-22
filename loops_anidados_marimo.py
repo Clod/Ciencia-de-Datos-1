@@ -295,7 +295,77 @@ def _(get_step, mo, set_step, steps):
 
 
 @app.cell
-def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
+def _():
+    """
+    🎨 PLANTILLAS HTML (la "caja negra" de la interfaz)
+
+    Acá está agrupado TODO el HTML del visualizador, separado de la lógica
+    Python. Cada plantilla es un string con "huecos" {campo} que se rellenan
+    después con .replace() desde la celda de visualización.
+
+    ¿Por qué .replace() y no .format()? Porque el contenido que guardamos en
+    los huecos puede traer llaves { } propias del código didáctico (por
+    ejemplo f'Botella {i}: {nivel}%') y .format() las interpretaría como
+    huecos nuevos, dando error. .replace() busca el texto exacto del hueco
+    y lo cambia, sin interpretar nada más.
+
+    Idea didáctica: podés tomar esta celda como una "caja negra gráfica".
+    Hace falta entender qué dibuja cada plantilla a grandes rasgos (una
+    botella, la consola, el visor de código), pero no el detalle de cada
+    estilo. El HTML dibuja la "pantalla"; el Python es la "lógica".
+    """
+    # Plantilla de UNA línea del visor de código.
+    # Huecos: {bg} color de fondo, {color} borde izquierdo, {opacity} transparencia,
+    #         {idx} número de línea, {line} texto del código.
+    PLANTILLA_LINEA_CODIGO = (
+        "<div style='background: {bg}; border-left: 4px solid {color};"
+        " padding: 2px 10px; opacity: {opacity}; white-space: pre;'>"
+        "{idx}: {line}</div>"
+    )
+
+    # Plantilla del recuadro oscuro que contiene todas las líneas del visor.
+    # Hueco: {lineas} las líneas ya armadas y unidas.
+    PLANTILLA_CAJA_CODIGO = (
+        "<div style='font-family: \"JetBrains Mono\", monospace;"
+        " background: midnightblue; color: white; padding: 15px;"
+        " border-radius: 8px; border: 1px solid steelblue;'>"
+        "{lineas}</div>"
+    )
+
+    # Plantilla de UNA botella con su nivel de líquido.
+    # Huecos: {border_color} color del borde, {glow} brillo (o vacío),
+    #         {lvl} porcentaje de llenado, {idx} número de botella.
+    PLANTILLA_BOTELLA = """
+    <div style="display: flex; flex-direction: column; align-items: center; width: 60px;">
+        <div style="position: relative; height: 160px; width: 50px; border: 3px solid {border_color}; {glow} border-top: none; border-radius: 0 0 8px 8px; background: red; overflow: hidden;">
+            <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: {lvl}%; background: linear-gradient(to top, teal, skyblue); transition: height 0.3s ease;"></div>
+        </div>
+        <span style="margin-top: 8px; font-size: 12px; color: {border_color}; font-weight: bold;">B{idx}</span>
+    </div>
+    """
+
+    # Plantilla del contenedor que agrupa todas las botellas en una fila.
+    # Hueco: {botellas} las botellas ya armadas y unidas.
+    PLANTILLA_FILA_BOTELLAS = """
+    <div style="display: flex; gap: 30px; justify-content: center; padding: 20px; background: black; border-radius: 12px; border: 1px solid slategray;">
+        {botellas}
+    </div>
+    """
+
+    # Plantilla del recuadro de consola (la "terminal" del programa simulado).
+    # Hueco: {lineas} los mensajes ya unidos y con formato de prompt.
+    PLANTILLA_CONSOLA = """
+    <div style="background: black; color: lime; font-family: monospace; padding: 10px; height: 250px; overflow-y: auto; border: 1px solid slategray; border-radius: 6px; font-size: 13px;">
+        {lineas}
+    </div>
+    """
+
+    return (PLANTILLA_LINEA_CODIGO, PLANTILLA_CAJA_CODIGO, PLANTILLA_BOTELLA,
+            PLANTILLA_FILA_BOTELLAS, PLANTILLA_CONSOLA)
+
+
+@app.cell
+def _(CANT_BOTELLAS, PLANTILLA_BOTELLA, PLANTILLA_CAJA_CODIGO, PLANTILLA_CONSOLA, PLANTILLA_FILA_BOTELLAS, PLANTILLA_LINEA_CODIGO, controls, get_step, mo, pasos_llenado, steps):
     """
     VISUALIZACIÓN PRINCIPAL: Esta es la celda que 'cobra vida'. 
     Toma el paso actual y renderiza el código resaltado, las botellas y la consola.
@@ -328,11 +398,12 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
         3. Decide, línea por línea, si es la línea actual y elige el estilo:
            verde + fondo celeste + opacidad total si lo es; rojo +
            transparente + opacidad media si no lo es.
-        4. Envuelve cada línea en una mini-capa HTML (<div>) y une todas con
-           "".join(styled_lines), que "pega" los elementos de la lista sin
-           separadores, formando un único bloque de HTML.
-        5. Por último, envuelve el bloque en mo.Html(...) para que marimo lo
-           muestre como HTML real en el navegador.
+        4. Usa la PLANTILLA_LINEA_CODIGO (definida en la celda de plantillas)
+           para envolver cada línea en una mini-capa HTML (<div>) y une todas
+           con "".join(styled_lines), formando un único bloque de HTML.
+        5. Por último, envuelve el bloque con PLANTILLA_CAJA_CODIGO y
+           mo.Html(...) para que marimo lo muestre como HTML real en el
+           navegador.
 
         Retorna:
             mo.Html: El bloque HTML listo para renderizar en la celda.
@@ -371,13 +442,28 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
             bg = "rgba(14, 165, 233, 0.15)" if idx == current_line else "transparent"
             # Se define la opacidad de la línea. 1 si es la línea actual, 0.5 si no.
             opacity = "1" if idx == current_line else "0.5"
-            # Se agrega la línea a la lista de líneas estilizadas.
-            styled_lines.append(f"<div style='background: {bg}; border-left: 4px solid {color}; padding: 2px 10px; opacity: {opacity}; white-space: pre;'>{idx}: {line}</div>")
+            # Se agrega la línea a la lista usando la plantilla HTML.
+            # Usamos .replace() (y no .format()) porque el texto de la línea
+            # puede traer llaves { } propias del código didáctico (por ejemplo
+            # f'Botella {i}: {nivel}%') y .format() las interpretaría como
+            # huecos nuevos. .replace() cambia el texto exacto del hueco y no
+            # interpreta nada más.
+            styled_lines.append(
+                PLANTILLA_LINEA_CODIGO
+                .replace("{bg}", bg)
+                .replace("{color}", color)
+                .replace("{opacity}", opacity)
+                .replace("{idx}", str(idx))
+                .replace("{line}", line)  # siempre por último: line puede contener { }
+            )
 
-        # Renderiza el código resaltado.
-        # Para ello se utiliza la librería mo.Html y se le pasa como parámetro un string con el código HTML.
-        # El string se construye con f-strings y se le pasa como parámetro un string con el código HTML.
-        return mo.Html(f"<div style='font-family: \"JetBrains Mono\", monospace; background: midnightblue; color: white; padding: 15px; border-radius: 8px; border: 1px solid steelblue;'>{''.join(styled_lines)}</div>")
+        # Renderiza el código resaltado usando la plantilla de la caja oscura.
+        # El HTML en sí vive en la celda de plantillas; acá solo rellenamos los
+        # huecos con .replace() y envolvemos el resultado en mo.Html(...)
+        # para que marimo lo muestre en el navegador.
+        return mo.Html(
+            PLANTILLA_CAJA_CODIGO.replace("{lineas}", "".join(styled_lines))
+        )
 
     # Visualization Logic
     # Lógica de Visualización: Calcula los niveles de las botellas hasta el paso actual.
@@ -414,24 +500,25 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
 
         Retorna:
             str: El bloque de HTML de UNA botella, listo para ser unido con
-                 los bloques de las demás. Se construye con una f-string,
-                 igual que los mensajes de la consola: cada {variable} se
-                 reemplaza por su valor al momento de ejecutarse la función.
+                 los bloques de las demás. El HTML en sí vive en la plantilla
+                 PLANTILLA_BOTELLA (celda de plantillas); acá solo calculamos
+                 los valores y los rellenamos con .replace(...).
         """
         # Si la botella está activa, el borde es de color teal y tiene un glow
         # Si la botella no está activa, el borde es de color gris y no tiene un glow
         border_color = "yellow" if active else "red"
         # El glow es una sombra que se aplica a la botella
         glow = "box-shadow: 0 0 15px rgba(20, 184, 166, 0.4);" if active else ""
-        # Renderiza una bottela con un contenedor de borde teal y fondo gris oscuro
-        return f"""
-        <div style="display: flex; flex-direction: column; align-items: center; width: 60px;">
-            <div style="position: relative; height: 160px; width: 50px; border: 3px solid {border_color}; {glow} border-top: none; border-radius: 0 0 8px 8px; background: red; overflow: hidden;">
-                <div style="position: absolute; bottom: 0; left: 0; width: 100%; height: {lvl}%; background: linear-gradient(to top, teal, skyblue); transition: height 0.3s ease;"></div>
-            </div>
-            <span style="margin-top: 8px; font-size: 12px; color: {border_color}; font-weight: bold;">B{idx}</span>
-        </div>
-        """
+        # Rellenamos la plantilla de la botella con los valores calculados.
+        # .replace() cambia cada {hueco} por su valor (igual que una f-string,
+        # pero la plantilla queda separada de la lógica Python).
+        return (
+            PLANTILLA_BOTELLA
+            .replace("{border_color}", border_color)
+            .replace("{glow}", glow)
+            .replace("{lvl}", str(lvl))
+            .replace("{idx}", str(idx))
+        )
     # Renderiza las botellas en una fila.
     # La expresión de adentro es una COMPRENSIÓN DE LISTA (list comprehension):
     #   [render_bottle(i, levels[i], current['bottle_idx'] == i) for i in range(CANT_BOTELLAS)]
@@ -443,11 +530,15 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
     # para formar una sola fila adentro del contenedor flex.
     # NOTA: usamos la constante CANT_BOTELLAS (no un 3 fijo) para que, si algún
     # día la cambiamos, las botellas se ajusten solas.
-    bottles = mo.Html(f"""
-    <div style="display: flex; gap: 30px; justify-content: center; padding: 20px; background: black; border-radius: 12px; border: 1px solid slategray;">
-        {"".join([render_bottle(i, levels[i], current['bottle_idx'] == i) for i in range(CANT_BOTELLAS)])}
-    </div>
-    """)
+    bottles = mo.Html(
+        PLANTILLA_FILA_BOTELLAS.replace(
+            "{botellas}",
+            "".join([
+                render_bottle(i, levels[i], current['bottle_idx'] == i)
+                for i in range(CANT_BOTELLAS)
+            ])
+        )
+    )
 
     # Renderiza la consola (la "pantalla" del programa simulado).
     # console_msgs es una comprensión de lista que recorre SOLO los pasos ya
@@ -458,11 +549,15 @@ def _(CANT_BOTELLAS, controls, get_step, mo, pasos_llenado, steps):
     # "' > ' + '<br>> '.join(console_msgs)" une todos los mensajes con un salto
     # de línea (<br>) y les antepone "> " para que parezcan una terminal real.
     # Si todavía no hay mensajes, mostramos "> Iniciando sistema...".
-    console = mo.Html(f"""
-    <div style="background: black; color: lime; font-family: monospace; padding: 10px; height: 250px; overflow-y: auto; border: 1px solid slategray; border-radius: 6px; font-size: 13px;">
-        {'> ' + '<br>> '.join(console_msgs) if console_msgs else '> Iniciando sistema...'}
-    </div>
-    """)
+    # Renderiza la consola usando la plantilla PLANTILLA_CONSOLA.
+    # Como la plantilla ya trae todo el HTML, acá solo armamos el contenido
+    # (la línea de texto que va adentro) y se lo pasamos a .replace(...).
+    console = mo.Html(
+        PLANTILLA_CONSOLA.replace(
+            "{lineas}",
+            '> ' + '<br>> '.join(console_msgs) if console_msgs else '> Iniciando sistema...'
+        )
+    )
 
     # Layout final: armamos la página completa combinando los bloques de arriba.
     #   mo.hstack(...) -> apila elementos en FILA    (horizontal)

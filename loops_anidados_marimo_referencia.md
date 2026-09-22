@@ -93,3 +93,15 @@ usuario hace clic, marimo llama a esa función y le pasa el evento. Ese
 parámetro se llama "_" por convención cuando no nos interesa usarlo. En este
 notebook las funciones son increment(), decrement() y reset(): fijense cómo
 sus docstrings explican lo mismo que antes hacían las lambdas inline.
+
+**Plantillas HTML (la "caja negra" gráfica):** Todo el HTML del visualizador
+está agrupado en la celda "🎨 PLANTILLAS HTML", separado de la lógica Python.
+Cada plantilla es un string con "huecos" {campo} que se rellenan después con
+.replace() desde la celda de visualización. Así el código Python queda limpio
+(no vemos ninguna etiqueta <div> en la lógica) y si querés cambiar un color o
+un tamaño, sabés exactamente dónde buscar.
+
+**¿Por qué .replace() y no f-strings?** Porque el contenido que metemos en los
+huecos puede traer llaves { } propias del código didáctico (por ejemplo
+f'Botella {i}: {nivel}%'), y .replace() cambia el texto exacto del hueco sin
+interpretar nada más.
