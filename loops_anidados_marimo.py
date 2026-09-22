@@ -61,7 +61,10 @@ import marimo
 __generated_with = "0.24.2"
 app = marimo.App(width="full")
 
-
+ # @app.cell es un decorator. Los decorators nos permiten modificar o mejorar una función o método. 
+ # Son una forma de agregar funcionalidad a una función o método sin cambiar su código. 
+ # Por ejemplo, @app.cell hace que la función sea una celda en marimo.
+ # Son un concepto avanzado de python que veremos mas adelante. No se preocupen si no lo entienden
 @app.cell
 def _():
     """
@@ -95,12 +98,22 @@ def _():
     """
     # Definimos las variables a nivel de celda para que sean "globales" en el notebook
     CANT_BOTELLAS = 3 # Variable "constante" (escrita en mayúsculas para indicar que no debe cambiar)
-    pasos_llenado = 4
-
+    pasos_llenado = 4 # Variable que indica en cuantos pasos se va a llenar cada botella. Es decir, que el for interno vai a dar 4 vueltas por cada vuelta que de el for externo. Es decir, 4 pasos de llenado por cada botella.
+    
     def get_trace():
         """
-        Simula la ejecución de los bucles anidados y captura el estado del sistema
-        en cada punto crítico (iteraciones, cálculos y finalización).
+        Simula la ejecución de los bucles anidados "en cámara lenta" y va
+        anotando (guardando en una lista) cómo se ve el sistema en cada
+        momento importante:
+
+        - En el arranque (los snapshots iniciales).
+        - En cada vuelta del bucle EXTERIOR (cuando empezamos con cada botella).
+        - En cada vuelta del bucle INTERIOR (cada paso de llenado y su cálculo).
+        - Al final, cuando ya se llenaron todas las botellas.
+
+        Esas anotaciones son los "pasos" de la traza: gracias a ellas, el
+        visualizador puede mostrar la ejecución sin tener que volver a
+        ejecutar el código real.
 
         ¿Qué es una "traza"?
         --------------------
@@ -391,7 +404,7 @@ def _(
     # Accedemos al elemento i-ésimo del vector 
     current = steps[current_idx]
 
-    def highlight_code(current_line):
+    def resaltar_codigo(current_line):
         """
         Dibuja el "visor de código" (el recuadro oscuro) y resalta la línea
         que se está ejecutando en el paso actual de la simulación.
@@ -489,7 +502,7 @@ def _(
         if st['bottle_idx'] != -1 and st['line'] >= 8:
             levels[st['bottle_idx']] = st['nivel']
 
-    def render_bottle(idx, lvl, active):
+    def dibujar_botella(idx, lvl, active):
         """
         Dibuja UNA botella con su nivel de llenado actual y la devuelve como
         un bloque de HTML (todavía como string, sin envolver en mo.Html).
@@ -537,8 +550,8 @@ def _(
         )
     # Renderiza las botellas en una fila.
     # La expresión de adentro es una COMPRENSIÓN DE LISTA (list comprehension):
-    #   [render_bottle(i, levels[i], current['bottle_idx'] == i) for i in range(CANT_BOTELLAS)]
-    # Recorre i = 0, 1, 2 y, por cada botella, llama a render_bottle(...) pasándole:
+    #   [dibujar_botella(i, levels[i], current['bottle_idx'] == i) for i in range(CANT_BOTELLAS)]
+    # Recorre i = 0, 1, 2 y, por cada botella, llama a dibujar_botella(...) pasándole:
     #   - i: la posición de la botella (0, 1 o 2).
     #   - levels[i]: su nivel de llenado actual (calculado en el bucle de arriba).
     #   - current['bottle_idx'] == i: True si esta botella es la activa en el paso actual.
@@ -550,7 +563,7 @@ def _(
         PLANTILLA_FILA_BOTELLAS.replace(
             "{botellas}",
             "".join([
-                render_bottle(i, levels[i], current['bottle_idx'] == i)
+                dibujar_botella(i, levels[i], current['bottle_idx'] == i)
                 for i in range(CANT_BOTELLAS)
             ])
         )
@@ -589,7 +602,7 @@ def _(
             mo.md("### 🕹️ Control & Debug"),
             controls,
             mo.md(f"**Snapshot:** {current_idx} / {len(steps)-1}"),
-            highlight_code(current['line'])
+            resaltar_codigo(current['line'])
         ], align="stretch"),
         mo.vstack([
             mo.md("### 📊 Estado de Botellas"),
@@ -603,13 +616,7 @@ def _(
     return
 
 
-@app.cell(hide_code=True)
-def _(mo):
-    mo.md(r"""
- 
-    """)
-    return
-
-
-if __name__ == "__main__":
+# Esta es la instruccion para que Marimo ejecute la aplicacion
+# Lo que hace es ejecutar la funcion app.run()
+if __name__ == "__main__": # Esta convencion hace que el codigo se ejecute solo si el archivo se ejecuta como script standalone
     app.run()
