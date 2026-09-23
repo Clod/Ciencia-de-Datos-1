@@ -29,14 +29,16 @@ Conceptos que vamos a ver:
 
 **Lambda:** Funciones anónimas. Se escriben en una sola línea. No las vimos todavía en clases pero lo importante es que entiendan que se usa de modo análogo a lo que vimos en clases.
 
-**Una forma de definir una función (no se usa en python)**
+**Forma estándar de definir una función**
 
-def f(param1, param2):  
+def f(param1, param2):
     return param1+param2
 
-**La forma que se usa en python**
+**Forma compacta con lambda**
 
 f = lambda param1, param2: param1+param2
+
+En el visualizador usamos def para increment(), decrement() y reset(), y lambda solo para la actualización en set_step().
 
 
 **Decorators: ** por ejemplo la línea @app.cell es un decorator. Pensemos que es una forma de agregarle funcionalidad a una función o método sin mostrar explícitamente en el código
