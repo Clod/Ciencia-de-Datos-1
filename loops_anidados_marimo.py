@@ -188,7 +188,7 @@ def _():
                 # Me guardo que calculé el nivel de la botella i
                 trace.append({"line": 8, "i": i, "j": j, "nivel": nivel, "msg": f"Calculando nivel: {nivel:.1f}%", "bottle_idx": i})
                 # Me guardo que muestro el nivel de la botella i
-                trace.append({"line": 9, "i": i, "j": j, "nivel": nivel, "msg": f"Botella {i}: {nivel:.1f}%", "bottle_idx": i})
+                trace.append({"line": 9, "i": i, "j": j, "nivel": nivel, "msg": f"Botella {i} / Paso {j}: {nivel:.1f}%", "bottle_idx": i})
 
         trace.append({"line": 11, "i": None, "j": None, "nivel": 100, "msg": "¡Proceso finalizado!", "bottle_idx": -1})
         # Paso extra para que se vea el efecto del último print en el debugger
@@ -489,7 +489,7 @@ def _(
             "    # Bucle interior",
             "    for j in range(1, pasos_llenado + 1):",
             "        nivel = (j / pasos_llenado) * 100",
-            "        print(f'Botella {i}: {nivel}%')",
+            "        print(f'Botella {i} / Paso{j}: {nivel}%')",
             "",
             "print('¡Proceso finalizado!')"
         ]
