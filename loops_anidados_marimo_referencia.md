@@ -13,7 +13,7 @@ La idea es que tengan un programa ejecutable que les permita jugar haciendo modi
 
 Todo lo que es HTML puede ser considerado como una "caja girs". Es decir que lo puedo tomar como "caja negra" que genera un elemento gráfico
 
-o pudeo modificarlo para ubicarme en la salida gráfica qué es lo que está dibujando. Para eso puse nombres de colores en lugar de códigos.
+o puedo modificarlo para ubicarme en la salida gráfica qué es lo que está dibujando. Para eso usé nombres de colores como midnightblue y teal, y funciones rgba() solo para transparencias como rgba(14, 165, 233, 0.15).
 
 Conceptos que vamos a ver:
 
