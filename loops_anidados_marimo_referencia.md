@@ -72,7 +72,7 @@ El string que anteponemos ("", "> ", "<br>> ", etc.) es el separador que
 va entre elemento y elemento. Con "" los unimos sin separadores.
 
 **F-strings (f"..."):** Texto con "huecos" que se rellenan con valores de
-variables. Ej: f"Botella {i}: {nivel}%" muestra el valor actual de i y nivel.
+variables. Ej: f"Botella {i} / Paso {j}: {nivel:.1f}%" muestra el valor actual de i, j y nivel.
 
 **Estado reactivo (mo.state):** La "memoria" del visualizador. Con
 get_step() leemos el paso actual y con set_step lo cambiamos. Cada vez que
@@ -103,5 +103,5 @@ un tamaño, sabés exactamente dónde buscar.
 
 **¿Por qué .replace() y no f-strings?** Porque el contenido que metemos en los
 huecos puede traer llaves { } propias del código didáctico (por ejemplo
-f'Botella {i}: {nivel}%'), y .replace() cambia el texto exacto del hueco sin
+f'Botella {i} / Paso{j}: {nivel}%'), y .replace() cambia el texto exacto del hueco sin
 interpretar nada más.
