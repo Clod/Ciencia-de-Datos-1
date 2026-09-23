@@ -6,3 +6,9 @@ maquina_de_cafe.html.zip
 /mp3
 /everything-claude-code
 /__marimo__/
+.venv/
+__pycache__/
+*.pyc
+Jupyter Roman/clase_01.ipynb
+.gitignore
+Jupyter Roman/clase02.ipynb
