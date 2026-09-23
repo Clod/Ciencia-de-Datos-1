@@ -103,7 +103,7 @@ Cada plantilla es un string con "huecos" {campo} que se rellenan después con
 (no vemos ninguna etiqueta <div> en la lógica) y si querés cambiar un color o
 un tamaño, sabés exactamente dónde buscar.
 
-**¿Por qué .replace() y no f-strings?** Porque el contenido que metemos en los
+**¿Por qué .replace() y no .format()?** Porque el contenido que metemos en los
 huecos puede traer llaves { } propias del código didáctico (por ejemplo
 f'Botella {i} / Paso{j}: {nivel}%'), y .replace() cambia el texto exacto del hueco sin
 interpretar nada más.
