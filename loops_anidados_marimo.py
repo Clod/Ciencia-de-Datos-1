@@ -398,10 +398,47 @@ def _(
     """
     VISUALIZACIÓN PRINCIPAL: Esta es la celda que 'cobra vida'. 
     Toma el paso actual y renderiza el código resaltado, las botellas y la consola.
+
+    ¿Cómo se dispara? (reactividad de marimo)
+    -----------------------------------------
+    En marimo, cada celda es una función cuyos parámetros son sus DEPENDENCIAS.
+    Esta celda recibe `get_step` (la forma de LEER el estado) y su primera
+    línea es current_idx = get_step(). Con eso, marimo deduce:
+
+        "Esta celda necesita saber cuál es el paso actual."
+
+    Cuando el usuario hace clic en un botón (o mueve el slider), ese control
+    llama a set_step(...), que es la forma de ESCRIBIR el estado. Al cambiar
+    ese valor, marimo detecta el cambio y vuelve a ejecutar automáticamente
+    SOLO las celdas que dependen de ese estado — incluida esta. No hace falta
+    ningún "refrescar" manual: el notebook se entera solo. A eso se llama
+    reactividad.
+
+    La secuencia completa, paso a paso:
+
+        1. Clic en "Siguiente ➡️" (o Anterior ⬅️ / Reiniciar 🔄 / slider)
+        2. Se llama a set_step(nuevo_valor)  ->  cambia el estado
+        3. marimo detecta el cambio de estado
+        4. Re-ejecuta esta celda (y las demás que lean get_step)
+        5. current_idx toma el nuevo valor y todo se re-renderiza
+
+    Esa es la gran diferencia con un script Python común: el "orden" no lo
+    decide la secuencia de líneas del archivo, sino el grafo de dependencias
+    que marimo arma mirando los parámetros de cada celda.
+
+    De dónde sale cada parámetro:
+        - get_step       -> de la celda de estado reactivo (lectura del paso).
+        - controls       -> de la celda de controles (botones y slider).
+        - steps          -> de la celda de simulación (la traza completa).
+        - PLANTILLA_*    -> de la celda de plantillas HTML (el "molde" visual).
     """
-    # Celda principal de visualización: se refresca cada vez que el paso cambia.
+    # Primera línea de la celda: LEER el paso actual con get_step().
+    # Al llamar a get_step() acá, marimo registra que esta celda DEPENDE del
+    # estado "paso". Cuando set_step(...) lo cambie (botones o slider), marimo
+    # volverá a ejecutar esta celda sola, sin tocar el resto del notebook.
     current_idx = get_step()
-    # Accedemos al elemento i-ésimo del vector 
+    # Con el paso en mano, buscamos su "foto" (snapshot) dentro de la traza.
+    # steps es la lista completa que armó get_trace() en la celda de simulación.
     current = steps[current_idx]
 
     def resaltar_codigo(current_line):
